@@ -1,0 +1,26 @@
+# Core data handling
+pandas==2.2.2
+numpy==1.26.4
+
+# NLP processing
+spacy==3.7.4
+dateparser==1.2.0
+regex==2024.11.6
+
+# ML / classification (intent detection if rule-based not enough)
+scikit-learn==1.5.1
+
+# Embeddings / semantic similarity (optional but recommended)
+sentence-transformers==2.7.0
+transformers==4.41.2
+torch==2.3.1
+
+# Structured schema validation
+pydantic==2.8.2
+
+# JSONL handling convenience (append-only storage)
+jsonlines==4.0.0
+
+# Logging & utilities
+python-dotenv==1.0.1
+tqdm==4.66.4

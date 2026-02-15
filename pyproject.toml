@@ -1,0 +1,23 @@
+[project]
+name = "Financial_AI_Agent"
+version = "1.0.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "dateparser==1.2.0",
+    "jsonlines==4.0.0",
+    "numpy==1.26.4",
+    "pandas==2.2.2",
+    "pydantic==2.8.2",
+    "python-dotenv==1.0.1",
+    "regex==2024.11.6",
+    "scikit-learn==1.5.1",
+    "sentence-transformers==2.7.0",
+    "spacy==3.7.4",
+    "torch==2.3.1",
+    "tqdm==4.66.4",
+    "transformers==4.41.2",
+    "pip==26.0.1",
+    "en-core-web-sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.7.1/en_core_web_sm-3.7.1-py3-none-any.whl"
+]
