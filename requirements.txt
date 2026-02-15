@@ -24,3 +24,7 @@ jsonlines==4.0.0
 # Logging & utilities
 python-dotenv==1.0.1
 tqdm==4.66.4
+
+#Langgraph
+langgraph>=1.0.8
+yfinance>=1.1.0
