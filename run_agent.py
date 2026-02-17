@@ -1,32 +1,40 @@
 from langgraph.graph import StateGraph, END
-
-from query_understanding.langgraph_node import (
-    query_understanding_node,
-    AgentState,
-)
-
+from agent_state import AgentState
+from query_understanding.langgraph_node import query_understanding_node
 from query_enrichment.langgraph_node import query_enrichment_node
+from query_cleaning.langgraph_node import query_cleaning_node
 
 
 def build_graph():
     builder = StateGraph(AgentState)
 
+    # -------------------------
+    # nodes
+    # -------------------------
     builder.add_node("query_understanding", query_understanding_node)
     builder.add_node("query_enrichment", query_enrichment_node)
+    builder.add_node("query_cleaning", query_cleaning_node)
 
+    # -------------------------
+    # flow
+    # -------------------------
     builder.set_entry_point("query_understanding")
+
     builder.add_edge("query_understanding", "query_enrichment")
-    builder.add_edge("query_enrichment", END)
+    builder.add_edge("query_enrichment", "query_cleaning")
+    builder.add_edge("query_cleaning", END)
 
     return builder.compile()
 
+
+# -------------------------------------------------
+# RUN
+# -------------------------------------------------
 
 if __name__ == "__main__":
     graph = build_graph()
 
     result = graph.invoke({
-        "user_query": "How did gold market performed last week?",
-        "enrichment_last_n": 1   # ✅ must match enrichment node
+        "user_query": "How did silver market performed last week compared to gold?",
+        "enrichment_last_n": 1   # used by cleaning + enrichment
     })
-
-    print(result)
