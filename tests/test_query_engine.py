@@ -1,4 +1,4 @@
-from query_engine.pipeline import process_query
+from query_engine_v2.pipeline import process_and_enrich_queries
 
 
 def run_tests():
@@ -53,7 +53,7 @@ def run_tests():
         "Future outlook?",
     ]
 
-    process_query(queries)
+    process_and_enrich_queries(queries)
 
 if __name__ == "__main__":
     run_tests()
