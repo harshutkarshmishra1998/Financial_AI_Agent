@@ -1,5 +1,5 @@
 from langgraph.graph import StateGraph, END
-from query_understanding.langgraph_node import query_understanding_node, AgentState
+from query_engine_v2.understanding.langgraph_node import query_understanding_node, AgentState
 from data_acquisition.langgraph_node import data_acquisition_node
 
 
