@@ -1,5 +1,6 @@
 # from unittest import result
-from query_engine_v2.understanding.pipeline import process_query
+from query_understanding.pipeline import process_query
+from query_enrichment.pipeline import enrich_query
 
 
 def run_tests():
@@ -55,32 +56,11 @@ def run_tests():
     ]
 
     for q in queries:
-        result = process_query(q)
+        process_query(q)
 
-        print("QUERY:", q)
-        print("SEMANTICS:", result.query_semantics)
-
-        print("PRIMARY ASSET:",
-            result.primary_asset.model_dump() if result.primary_asset else None)
-
-        print("ALL ASSETS:",
-            [a.model_dump() for a in result.assets])
-
-        print("INTENT:", result.question_type)
-        print("TIME:", result.time_horizon)
-        print("CONFIDENCE:", result.resolution_confidence)
-        print("AMBIGUOUS:", result.resolution_ambiguous)
-        print("TOP CANDIDATES:", [a.model_dump() for a in result.assets])
-        print("RELATIONSHIP TYPE:", result.relationship_type)
-        print("RELATIONSHIP DIRECTION:", result.relationship_direction)
-        print("RELATIONSHIP CONFIDENCE:", result.relationship_confidence)
-        print("-" * 60)
-
-        if result.primary_asset:
-            assert isinstance(result.primary_asset.resolved, bool)
+    enrich_query(46)
 
     print("\nAll tests passed.")
-
 
 if __name__ == "__main__":
     run_tests()

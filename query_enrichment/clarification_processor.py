@@ -169,11 +169,3 @@ def run_clarification_processor():
     print("\nDONE")
     print("Generated answers →", GENERATED_ANSWERS)
     print("Final resolved logs →", FINAL_LOGS)
-
-
-# =========================================================
-# ENTRYPOINT
-# =========================================================
-
-if __name__ == "__main__":
-    run_clarification_processor()

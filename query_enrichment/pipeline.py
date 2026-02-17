@@ -35,6 +35,7 @@ from query_enrichment.quality_reporter import generate_quality_report
 # =========================================================
 
 from query_enrichment.clarification_generator import generate_clarification_plan
+from query_enrichment.clarification_processor import run_clarification_processor
 
 
 # =========================================================
@@ -126,10 +127,65 @@ def interpret_record(r: Dict) -> Dict:
 # MAIN PIPELINE
 # =========================================================
 
-def run():
+# def enrich_query():
+
+#     print("Loading raw query logs...")
+#     records = load_jsonl(INPUT)
+
+#     print("Running enrichment...")
+#     records = [enrich_record(r) for r in records]
+
+#     print("Running semantic interpretation...")
+#     records = [interpret_record(r) for r in records]
+
+#     print("Running interpretation validation...")
+#     records = validate_records(records)
+
+#     print("Generating retrieval guidance...")
+#     for r in records:
+#         meta = r["interpretation_validation"]
+#         r["retrieval_plan_guidance"] = recommend_scope(
+#             meta["completeness_score"],
+#             meta["ambiguity_level"] != "low",
+#         )
+
+#     print("Generating clarification plans...")
+#     for r in records:
+#         r["clarification_plan"] = generate_clarification_plan(r)
+
+#     print("Saving final enriched logs...")
+#     write_jsonl(OUTPUT, records)
+
+#     print("Saving clarification audit...")
+#     write_clarification_audit(CLARIFICATION_AUDIT, records)
+
+#     print("\nSYSTEM QUALITY REPORT")
+#     print(json.dumps(generate_quality_report(records), indent=2))
+
+#     print("\nRunning Clarification Processor")
+#     run_clarification_processor()
+
+
+def enrich_query(last_n: int | None = None):
+    """
+    Enrich query logs.
+    
+    Parameters
+    ----------
+    last_n : int | None
+        If provided, only the last N records from INPUT jsonl are processed.
+        If None, process all records.
+    """
 
     print("Loading raw query logs...")
     records = load_jsonl(INPUT)
+
+    # ---- select subset from end ----
+    if last_n is not None:
+        if last_n <= 0:
+            raise ValueError("last_n must be a positive integer")
+        records = records[-last_n:]
+        print(f"Processing last {len(records)} records")
 
     print("Running enrichment...")
     records = [enrich_record(r) for r in records]
@@ -161,10 +217,5 @@ def run():
     print("\nSYSTEM QUALITY REPORT")
     print(json.dumps(generate_quality_report(records), indent=2))
 
-
-# =========================================================
-# ENTRYPOINT
-# =========================================================
-
-if __name__ == "__main__":
-    run()
+    print("\nRunning Clarification Processor")
+    run_clarification_processor()
