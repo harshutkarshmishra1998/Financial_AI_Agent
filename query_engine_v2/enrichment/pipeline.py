@@ -6,35 +6,35 @@ from typing import List, Dict
 # CORE ENRICHMENT
 # =========================================================
 
-from query_enrichment.enrichment_core import enrich_record
+from query_engine_v2.enrichment.enrichment_core import enrich_record
 
 
 # =========================================================
 # SEMANTIC INTERPRETATION
 # =========================================================
 
-from query_enrichment.intent_classifier import classify_intent
-from query_enrichment.direction_extractor import extract_direction
-from query_enrichment.temporal_normalizer import normalize_time_expression
+from query_engine_v2.enrichment.intent_classifier import classify_intent
+from query_engine_v2.enrichment.direction_extractor import extract_direction
+from query_engine_v2.enrichment.temporal_normalizer import normalize_time_expression
 
-from query_enrichment.entity_hierarchy_resolver import resolve_entity_scope
-from query_enrichment.event_semantic_detector import detect_event_context
+from query_engine_v2.enrichment.entity_hierarchy_resolver import resolve_entity_scope
+from query_engine_v2.enrichment.event_semantic_detector import detect_event_context
 
 
 # =========================================================
 # VALIDATION + PLANNING
 # =========================================================
 
-from query_enrichment.interpretation_validator import validate_records
-from query_enrichment.retrieval_scope_advisor import recommend_scope
-from query_enrichment.quality_reporter import generate_quality_report
+from query_engine_v2.enrichment.interpretation_validator import validate_records
+from query_engine_v2.enrichment.retrieval_scope_advisor import recommend_scope
+from query_engine_v2.enrichment.quality_reporter import generate_quality_report
 
 
 # =========================================================
 # CLARIFICATION
 # =========================================================
 
-from query_enrichment.clarification_generator import generate_clarification_plan
+from query_engine_v2.enrichment.clarification_generator import generate_clarification_plan
 
 
 # =========================================================

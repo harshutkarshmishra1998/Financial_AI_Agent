@@ -1,5 +1,5 @@
 # from unittest import result
-from query_understanding.pipeline import process_query
+from query_engine_v2.understanding.pipeline import process_query
 
 
 def run_tests():
