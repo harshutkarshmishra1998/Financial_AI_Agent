@@ -1,5 +1,5 @@
 from typing import TypedDict
-from query_understanding.pipeline import process_query
+from query_engine_v2.understanding.pipeline import process_query
 
 
 class AgentState(TypedDict, total=False):
