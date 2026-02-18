@@ -1,0 +1,35 @@
+keyword_mapping:
+
+  intraday:
+    - today
+    - now
+    - hour
+    - intraday
+
+  short_term:
+    - week
+    - days
+    - recent
+
+  medium_term:
+    - month
+    - quarter
+
+  long_term:
+    - year
+    - years
+
+
+semantic_horizons:
+
+  latest:
+    lookback_days: 5
+    resolution: daily
+
+  yesterday:
+    lookback_days: 2
+    resolution: hourly
+
+  pandemic_period:
+    start: "2020-03-01"
+    end: "2021-06-01"

@@ -1,4 +1,4 @@
-from typing import TypedDict, List
+from typing import TypedDict, List, Dict, Any
 
 class AgentState(TypedDict, total=False):
     user_query: str
@@ -8,3 +8,6 @@ class AgentState(TypedDict, total=False):
 
     cleaned_records: int
     deleted_intermediate_files: List[str]
+
+    acquisition_processed: int
+    acquisition_summary: List[Dict[str, Any]]

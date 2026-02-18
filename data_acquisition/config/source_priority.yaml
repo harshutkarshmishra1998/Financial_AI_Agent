@@ -1,0 +1,16 @@
+stock:
+  - yfinance
+  - alpha_vantage
+  - stooq
+
+crypto:
+  - yfinance
+  - stooq
+
+commodity:
+  - yfinance
+  - stooq
+
+index:
+  - yfinance
+  - stooq

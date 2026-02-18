@@ -1,0 +1,14 @@
+default_time_horizon: medium_term
+default_macro_basket:
+  - SPY
+  - ^NSEI
+  - BTC-USD
+  - XAUUSD
+  - CL=F
+  - ^VIX
+
+progressive_retry:
+  multiplier: 2
+  max_attempts: 3
+
+ambiguity_threshold: 0.4

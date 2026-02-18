@@ -1,0 +1,3 @@
+from data_acquisition.common.schema_registry import SchemaRegistry
+
+NEWS_SCHEMA = SchemaRegistry.NEWS_ARTICLE

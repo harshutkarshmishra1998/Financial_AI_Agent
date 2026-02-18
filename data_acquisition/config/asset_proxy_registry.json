@@ -1,0 +1,14 @@
+{
+    "global_market": ["SPY", "VT"],
+    "us_market": ["SPY"],
+    "india_market": ["^NSEI"],
+    "technology_sector": ["QQQ"],
+    "energy_sector": ["XLE"],
+    "financial_sector": ["XLF"],
+    "gold": ["XAUUSD", "GLD"],
+    "silver": ["SI=F"],
+    "oil": ["CL=F"],
+    "crypto_market": ["BTC-USD", "ETH-USD"],
+    "volatility": ["^VIX"],
+    "dollar_index": ["DX-Y.NYB"]
+}
