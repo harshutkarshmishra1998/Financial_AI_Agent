@@ -4,7 +4,23 @@ from query_understanding.langgraph_node import query_understanding_node
 from query_enrichment.langgraph_node import query_enrichment_node
 from query_cleaning.langgraph_node import query_cleaning_node
 
+# -------------------------------------------------
+# LOAD QUERIES
+# -------------------------------------------------
+# from pathlib import Path
 
+# def load_queries(file_path: str):
+#     path = Path(file_path)
+
+#     if not path.exists():
+#         raise FileNotFoundError(f"Query file not found: {file_path}")
+
+#     with open(path, "r", encoding="utf-8") as f:
+#         return [line.strip() for line in f if line.strip()]
+
+# -------------------------------------------------
+# GRAPH
+# -------------------------------------------------
 def build_graph():
     builder = StateGraph(AgentState)
 
@@ -38,3 +54,19 @@ if __name__ == "__main__":
         "user_query": "How did silver market performed last week compared to gold?",
         "enrichment_last_n": 1   # used by cleaning + enrichment
     })
+
+# if __name__ == "__main__":
+#     graph = build_graph()
+
+#     queries = load_queries("uploaded_files/queries.txt")
+
+#     for i, query in enumerate(queries, start=1):
+#         print(f"\n--- Running Query {i} ---")
+#         print("Query:", query)
+
+#         result = graph.invoke({
+#             "user_query": query,
+#             "enrichment_last_n": 1
+#         })
+
+#         print("Result:", result)

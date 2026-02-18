@@ -8,7 +8,7 @@ Usage:
     python -m tests.test_data_acquisition
 """
 
-from data_acquisition.pipeline import process_data_acquisition
+from data_acquisition_v1.pipeline import process_data_acquisition
 
 
 def main():
