@@ -47,7 +47,7 @@ def mock_anomaly_batch(run_id: str):
     ]
 
 
-def test_full_pipeline():
+def test_foundation():
 
     run_id = RunManager.new_run()
 
@@ -66,4 +66,4 @@ def test_full_pipeline():
 
 if __name__ == "__main__":
     clear_directory("data")
-    test_full_pipeline()
+    test_foundation()
