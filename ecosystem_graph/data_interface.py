@@ -1,149 +1,59 @@
+from __future__ import annotations
+
+from typing import Dict, Iterable, List, Optional
+
 import pandas as pd
-import yfinance as yf
-from fredapi import Fred
-from groq import Groq
-import json
-import api_keys
 
 
-class EntityResolver:
+class TimeSeriesProvider:
     """
-    Uses LLM to classify economic entity into data category.
-    No hardcoded mapping.
+    Interface-first provider.
+    Production implementations can back these methods with APIs/DB/knowledge graphs.
+    Tests can pass in-memory dictionaries.
     """
 
-    def __init__(self, groq_api_key, model="qwen-qwq-32b"):
-        self.client = Groq()
-        self.model = model
+    def __init__(
+        self,
+        company_map: Optional[Dict[str, Dict]] = None,
+        series_map: Optional[Dict[str, pd.Series]] = None,
+    ):
+        self.company_map = company_map or {}
+        self.series_map = series_map or {}
 
-    def classify(self, entity_name):
+    def get_company_profile(self, symbol: str) -> Dict:
+        """
+        Expected keys (all optional):
+        - company_name, sector
+        - inputs: [{"name": "..."}]
+        - outputs: [{"name": "..."}]
+        - competitors: ["..."]
+        - input_dependencies: {"Input": {"producers": [], "competing_materials": [], "influenced_by": []}}
+        - output_dependencies: {"Output": {"consumer_sectors": [], "competing_products": [], "influenced_by": []}}
+        """
+        return self.company_map.get(symbol, {})
 
-        prompt = f"""
-Classify the economic entity below into ONE category:
-
-equity
-index
-currency
-commodity
-interest_rate
-macro_indicator
-bond_yield
-unknown
-
-Return STRICT JSON:
-{{"category": "..."}}
-
-Entity: {entity_name}
-"""
-
-        resp = self.client.chat.completions.create(
-            model=self.model,
-            messages=[{"role": "user", "content": prompt}],
-            temperature=0
-        )
-
-        return json.loads(resp.choices[0].message.content)["category"] #type: ignore
-    
-class SeriesLocator:
-
-    def __init__(self, fred_api_key):
-        self.fred = Fred(api_key=fred_api_key)
-
-    # --------------------------
-    # Equity / commodity / FX
-    # --------------------------
-
-    def search_yfinance(self, entity_name):
-
-        # yfinance supports fuzzy ticker search via query endpoint
-        # we approximate using ticker download attempts
-
-        try:
-            data = yf.download(entity_name, period="5y", progress=False)
-            if not data.empty: #type: ignore
-                return data["Close"] #type: ignore
-        except:
-            pass
-
-        return None
-
-    # --------------------------
-    # FRED macro search
-    # --------------------------
-
-    def search_fred(self, entity_name):
-
-        try:
-            matches = self.fred.search(entity_name)
-            if matches.empty: #type: ignore
-                return None
-
-            # choose most popular series automatically
-            series_id = matches.sort_values( #type: ignore
-                "popularity", ascending=False
-            ).iloc[0]["id"]
-
-            data = self.fred.get_series(series_id)
-            return data
-
-        except:
+    def get_series(self, entity_name: str) -> Optional[pd.Series]:
+        series = self.series_map.get(entity_name)
+        if series is None:
             return None
-        
-class SeriesNormalizer:
-
-    def align(self, series):
-
         s = pd.Series(series).dropna()
-
-        # convert to daily index
         if not isinstance(s.index, pd.DatetimeIndex):
             s.index = pd.to_datetime(s.index)
+        return s.sort_index()
 
-        # resample to daily forward fill
-        s = s.resample("D").ffill()
+    def get_input_dependencies(self, symbol: str, input_name: str) -> Dict[str, List[str]]:
+        profile = self.get_company_profile(symbol)
+        return profile.get("input_dependencies", {}).get(input_name, {})
 
-        return s
-    
-class TimeSeriesProvider:
+    def get_output_dependencies(self, symbol: str, output_name: str) -> Dict[str, List[str]]:
+        profile = self.get_company_profile(symbol)
+        return profile.get("output_dependencies", {}).get(output_name, {})
 
-    def __init__(self):
-        self.resolver = EntityResolver()
-        self.locator = SeriesLocator()
-        self.normalizer = SeriesNormalizer()
+    def iter_company_inputs(self, symbol: str) -> Iterable[Dict]:
+        return self.get_company_profile(symbol).get("inputs", [])
 
-        self.cache = {}
+    def iter_company_outputs(self, symbol: str) -> Iterable[Dict]:
+        return self.get_company_profile(symbol).get("outputs", [])
 
-    def get_series(self, entity_name):
-
-        if entity_name in self.cache:
-            return self.cache[entity_name]
-
-        category = self.resolver.classify(entity_name)
-
-        series = None
-
-        # try market data first
-        if category in ["equity", "commodity", "currency", "index"]:
-            series = self.locator.search_yfinance(entity_name)
-
-        # try macro database
-        if series is None and category in [
-            "macro_indicator",
-            "interest_rate",
-            "bond_yield"
-        ]:
-            series = self.locator.search_fred(entity_name)
-
-        # fallback — try both
-        if series is None:
-            series = self.locator.search_yfinance(entity_name)
-        if series is None:
-            series = self.locator.search_fred(entity_name)
-
-        if series is None:
-            return None
-
-        series = self.normalizer.align(series)
-
-        self.cache[entity_name] = series
-        return series
+    def iter_competitors(self, symbol: str) -> List[str]:
+        return self.get_company_profile(symbol).get("competitors", [])
