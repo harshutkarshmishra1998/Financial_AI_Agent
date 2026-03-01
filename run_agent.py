@@ -4,12 +4,6 @@ import json
 from pathlib import Path
 from typing import Any, Dict
 
-from foundation import RunManager
-from market_signal.engine import run as run_market_signal
-from ecosystem_graph.runner import run as run_ecosystem_graph
-from ecosystem_graph.serializer import save_graph
-
-
 def run_full_pipeline(symbol: str, start_date: str, end_date: str) -> Dict[str, Any]:
     """
     One-function entrypoint for end-to-end execution:
@@ -19,6 +13,11 @@ def run_full_pipeline(symbol: str, start_date: str, end_date: str) -> Dict[str, 
 
     Returns run metadata with paths and counts.
     """
+
+    from foundation import RunManager
+    from market_signal.engine import run as run_market_signal
+    from ecosystem_graph.runner import run as run_ecosystem_graph
+    from ecosystem_graph.serializer import save_graph
 
     run_id = RunManager.new_run()
 
@@ -55,3 +54,19 @@ def run_full_pipeline(symbol: str, start_date: str, end_date: str) -> Dict[str, 
     summary["summary_path"] = str(summary_path)
 
     return summary
+
+
+def _parse_args():
+    import argparse
+
+    parser = argparse.ArgumentParser(description="Run full Financial AI pipeline")
+    parser.add_argument("--symbol", required=True, help="Ticker symbol, e.g. TCS.NS")
+    parser.add_argument("--start", required=True, help="Start date YYYY-MM-DD")
+    parser.add_argument("--end", required=True, help="End date YYYY-MM-DD")
+    return parser.parse_args()
+
+
+if __name__ == "__main__":
+    args = _parse_args()
+    result = run_full_pipeline(args.symbol, args.start, args.end)
+    print(json.dumps(result, indent=2))

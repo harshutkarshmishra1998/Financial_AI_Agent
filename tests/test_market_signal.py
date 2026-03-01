@@ -1,7 +1,24 @@
 import argparse
+import shutil
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
 from run_agent import run_full_pipeline
-from tests.test_foundation import clear_directory
+
+
+def clear_directory(folder_path: str | Path):
+    folder = Path(folder_path)
+    if not folder.exists():
+        return
+    for item in folder.iterdir():
+        if item.is_dir():
+            shutil.rmtree(item)
+        else:
+            item.unlink()
 
 
 def parse_args():
@@ -16,8 +33,6 @@ def parse_args():
     )
     return parser.parse_args()
 
-    print(f"Graph saved: nodes={len(nodes)}, edges={len(edges)} @ {graph_dir}")
-    return nodes, edges
 
 if __name__ == "__main__":
     args = parse_args()
