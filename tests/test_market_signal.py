@@ -2,43 +2,54 @@ from foundation import RunManager
 from market_signal.engine import run
 from market_signal.features import engineer_features
 
+from market_signal.advanced_plots import (
+    plot_full_signal_context,
+    anomaly_heatmap,
+    regime_visualizer,
+    signal_vs_volatility,
+    multi_symbol_overlay
+)
+
 import pandas as pd
 import numpy as np
 from pathlib import Path
-import matplotlib.pyplot as plt
+
+from tests.test_foundation import clear_directory
 
 
 # =========================================================
-# 1. FEATURE ENGINEERING TEST
+# 1️⃣ FEATURE ENGINEERING TEST
 # =========================================================
 
-def test_feature_engineering():
+# def feature_engineering_test():
 
-    print("\n==============================")
-    print("FEATURE ENGINEERING TEST")
-    print("==============================")
+#     print("\n==============================")
+#     print("FEATURE ENGINEERING TEST")
+#     print("==============================")
 
-    df = pd.DataFrame({
-        "open": np.random.rand(100),
-        "high": np.random.rand(100),
-        "low": np.random.rand(100),
-        "close": np.random.rand(100),
-        "volume": np.random.randint(1000, 5000, 100),
-    })
+#     df = pd.DataFrame({
+#         "open": np.random.rand(100),
+#         "high": np.random.rand(100),
+#         "low": np.random.rand(100),
+#         "close": np.random.rand(100),
+#         "volume": np.random.randint(1000, 5000, 100),
+#     })
 
-    df.index = pd.date_range("2020-01-01", periods=100)
+#     df.index = pd.date_range("2020-01-01", periods=100)
 
-    result = engineer_features(df)
+#     result = engineer_features(df)
 
-    print("\nFeature dataframe preview:")
-    print(result.head())
+#     print("\nFeature dataframe preview:")
+#     print(result.head())
 
 
 # =========================================================
-# 2. SIGNAL ENGINE RUN
+# 2️⃣ SIGNAL ENGINE RUN
 # =========================================================
 
-def test_signal_run():
+ticker = "TCS.NS"
+
+def run_signal_engine():
 
     print("\n==============================")
     print("SIGNAL ENGINE RUN")
@@ -47,7 +58,8 @@ def test_signal_run():
     run_id = RunManager.new_run()
 
     events = run(
-        symbol="RELIANCE.NS",
+        # symbol="RELIANCE.NS",
+        symbol=ticker,
         start="2019-01-01",
         end="2021-01-01",
         run_id=run_id
@@ -61,47 +73,46 @@ def test_signal_run():
 
 
 # =========================================================
-# 3. COVID VALIDATION
+# 3️⃣ KNOWN EVENT VALIDATION
 # =========================================================
 
-def test_known_event(events):
+def validate_known_event(events):
 
     print("\n==============================")
     print("KNOWN EVENT VALIDATION")
     print("==============================")
 
-    detected_dates = [e.event_timestamp.strftime("%Y-%m") for e in events]
+    detected_months = [
+        e.event_timestamp.strftime("%Y-%m")
+        for e in events
+    ]
 
     print("\nDetected months:")
-    print(detected_dates)
+    print(detected_months)
 
-    if any("2020-03" in d for d in detected_dates):
+    if any("2020-03" in m for m in detected_months):
         print("\n✅ DETECTED COVID CRASH!")
     else:
         print("\n❌ COVID CRASH NOT DETECTED")
 
 
 # =========================================================
-# 4. LOAD JSONL EXPORT
+# 4️⃣ JSONL CHECK
 # =========================================================
 
-def load_jsonl(run_id):
+def verify_json_export(run_id):
 
     print("\n==============================")
-    print("JSONL EXPORT CHECK")
+    print("JSON EXPORT CHECK")
     print("==============================")
 
     path = Path("data") / run_id / "signal" / "anomalies.jsonl"
 
     if not path.exists():
-        print("JSONL not found:", path)
+        print("❌ anomalies.jsonl not found")
         return None
 
     df = pd.read_json(path, lines=True)
-
-    df["event_timestamp"] = pd.to_datetime(df["event_timestamp"])
-    df = df.sort_values("event_timestamp")
-
     print("\nJSONL Preview:")
     print(df.head())
 
@@ -109,88 +120,29 @@ def load_jsonl(run_id):
 
 
 # =========================================================
-# 5. PLOT SIGNAL STRENGTH
+# 5️⃣ VISUAL ANALYTICS
 # =========================================================
 
-def plot_full_signal_context(run_id, symbol="RELIANCE.NS"):
+def run_visual_analytics(run_id):
 
     print("\n==============================")
-    print("FULL SIGNAL CONTEXT PLOT")
+    print("ADVANCED VISUAL ANALYTICS")
     print("==============================")
 
-    # -----------------------------
-    # Load anomaly JSONL
-    # -----------------------------
-    events_path = Path("data") / run_id / "signal" / "anomalies.jsonl"
+    # full market context (offline)
+    plot_full_signal_context(run_id, ticker)
 
-    if not events_path.exists():
-        print("No anomaly JSONL found")
-        return
+    # heatmap
+    anomaly_heatmap(run_id)
 
-    events = pd.read_json(events_path, lines=True)
-    events["event_timestamp"] = pd.to_datetime(events["event_timestamp"])
-    events = events.sort_values("event_timestamp")
+    # regime segmentation
+    regime_visualizer(run_id)
 
-    # -----------------------------
-    # Load raw price data again
-    # (same range as events)
-    # -----------------------------
-    import yfinance as yf
+    # phase diagram
+    signal_vs_volatility(run_id)
 
-    start = events["event_timestamp"].min() - pd.Timedelta(days=60)
-    end = events["event_timestamp"].max() + pd.Timedelta(days=60)
-
-    price = yf.download(symbol, start=start, end=end, progress=False)
-    price.index = pd.to_datetime(price.index)
-
-    # -----------------------------
-    # PLOT
-    # -----------------------------
-    fig, ax_price = plt.subplots(figsize=(12, 6))
-
-    # PRICE LINE
-    ax_price.plot(price.index, price["Close"], label="Price")
-    ax_price.set_ylabel("Price")
-    ax_price.set_title(f"{symbol} — Price + Anomaly Signals")
-
-    # -----------------------------
-    # ANOMALY MARKERS
-    # -----------------------------
-    anomaly_prices = price.loc[events["event_timestamp"], "Close"]
-
-    ax_price.scatter(
-        events["event_timestamp"],
-        anomaly_prices,
-        s=120,
-        marker="o",
-        label="Anomaly Event"
-    )
-
-    # -----------------------------
-    # SIGNAL STRENGTH (SECOND AXIS)
-    # -----------------------------
-    ax_signal = ax_price.twinx()
-
-    ax_signal.plot(
-        events["event_timestamp"],
-        events["signal_strength"],
-        linestyle="--",
-        label="Signal Strength"
-    )
-
-    ax_signal.set_ylabel("Signal Strength (0–1)")
-
-    # -----------------------------
-    # LEGEND MERGE
-    # -----------------------------
-    lines1, labels1 = ax_price.get_legend_handles_labels()
-    lines2, labels2 = ax_signal.get_legend_handles_labels()
-
-    ax_price.legend(lines1 + lines2, labels1 + labels2)
-
-    plt.grid(True)
-    plt.tight_layout()
-    plt.show()
+    # overlay (single run example)
+    # multi_symbol_overlay([run_id])
 
 
 # =========================================================
@@ -199,16 +151,18 @@ def plot_full_signal_context(run_id, symbol="RELIANCE.NS"):
 
 if __name__ == "__main__":
 
-    print("\n\nPHASE-1 FULL SYSTEM TEST\n")
+    print("\n\nPHASE-1 FULL SYSTEM INSPECTION\n")
 
-    test_feature_engineering()
+    clear_directory("data")
 
-    run_id, events = test_signal_run()
+    # feature_engineering_test()
 
-    test_known_event(events)
+    run_id, events = run_signal_engine()
 
-    df = load_jsonl(run_id)
+    validate_known_event(events)
 
-    plot_full_signal_context(run_id)
+    verify_json_export(run_id)
+
+    run_visual_analytics(run_id)
 
     print("\n\nPHASE-1 INSPECTION COMPLETE\n")

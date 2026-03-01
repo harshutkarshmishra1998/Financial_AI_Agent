@@ -127,6 +127,7 @@ from .cluster import cluster_events
 from .dtw import rolling_dtw
 from .config import MIN_PRICE_MOVE_PCT
 from .export import export_events_jsonl
+from .export import export_signal_timeline
 
 
 # ---------------------------------------------------
@@ -205,7 +206,7 @@ def run(symbol, start, end, run_id):
         price_move = _safe_price_change(raw, event_date)
 
         # minimum economic significance
-        if abs(price_move) < MIN_PRICE_MOVE_PCT:
+        if abs(price_move) < MIN_PRICE_MOVE_PCT: #type: ignore
             continue
 
         # composite signal strength
@@ -222,9 +223,9 @@ def run(symbol, start, end, run_id):
                 event_timestamp=event_date,
                 symbol=symbol,
                 anomaly_score=float(signal_strength),
-                price_change_pct=float(price_move),
+                price_change_pct=float(price_move), #type: ignore
                 data_hash=raw_hash,
-                model_name="IsolationForest_v2_hardened",
+                model_name="Isolation_Forest_v1",
                 feature_window="30d",
             )
         )
@@ -232,5 +233,6 @@ def run(symbol, start, end, run_id):
     if artifacts:
         ArtifactStore.write(artifacts, "anomalies")
         export_events_jsonl(artifacts, run_id)
+        export_signal_timeline(df, run_id)
 
     return artifacts

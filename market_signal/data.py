@@ -8,24 +8,24 @@ def fetch_ohlcv(symbol: str, start: str, end: str) -> pd.DataFrame:
 
     df = yf.download(symbol, start=start, end=end, progress=False)
 
-    if df.empty:
+    if df.empty: #type: ignore
         raise ValueError(f"No data for {symbol}")
 
     # ---------------------------------------------
     # Flatten MultiIndex columns if present
     # ---------------------------------------------
-    if isinstance(df.columns, pd.MultiIndex):
-        df.columns = df.columns.get_level_values(0)
+    if isinstance(df.columns, pd.MultiIndex): #type: ignore
+        df.columns = df.columns.get_level_values(0) #type: ignore
 
-    df.columns = [c.lower() for c in df.columns]
+    df.columns = [c.lower() for c in df.columns] #type: ignore
 
     required_cols = ["open", "high", "low", "close", "volume"]
 
-    missing = set(required_cols) - set(df.columns)
+    missing = set(required_cols) - set(df.columns) #type: ignore
     if missing:
         raise ValueError(f"Missing required columns: {missing}")
 
-    df = df[required_cols]
+    df = df[required_cols] #type: ignore
 
     df.index.name = "date"
 
