@@ -1,45 +1,34 @@
-import os
-from data.market_universe import MarketUniverse
-from core.graph_builder import GraphBuilder
-from core.graph_expander import GraphExpander
-from core.graph_validator import GraphValidator
-from llm.groq_extractor import GroqExtractor
+# ecosystem_graph/pipeline.py
+
+from ecosystem_graph.data.market_universe import MarketUniverse
+from ecosystem_graph.data.ontology import INDUSTRY_DEPENDENCY_PROFILE
+from ecosystem_graph.core.graph_engine import EcosystemGraphEngine
+from ecosystem_graph.core.propagation import PropagationEngine
 
 
 class EcosystemPipeline:
 
-    def __init__(self, universe_path, groq_key=None):
+    def __init__(self, universe_path):
         self.universe = MarketUniverse(universe_path)
-        self.llm = GroqExtractor(groq_key) if groq_key else None
 
-    def run(self, symbol, output_dir="graph_output"):
+    def run(self, symbol):
 
-        self.universe.validate_symbol(symbol)
-        info = self.universe.get_company_info(symbol)
+        company = self.universe.get_company(symbol)
 
-        builder = GraphBuilder(symbol, info["sector"])
-        expander = GraphExpander(builder, self.universe, self.llm)
+        ticker = company["yfinance_symbol"]
+        industry = company["nse_industry"]
 
-        expander.expand_supply()
-        expander.expand_competitors()
-        expander.inject_macro()
-        expander.inject_policy()
-        expander.expand_llm()
+        engine = EcosystemGraphEngine(ticker, industry)
 
-        validator = GraphValidator(builder)
-        validator.ensure_macro_presence()
+        profile = INDUSTRY_DEPENDENCY_PROFILE.get(industry, {})
 
-        nodes_df, edges_df = validator.to_dataframes()
+        propagation = PropagationEngine(engine)
 
-        os.makedirs(output_dir, exist_ok=True)
-        nodes_df.to_parquet(f"{output_dir}/nodes.parquet")
-        edges_df.to_parquet(f"{output_dir}/edges.parquet")
+        propagation.inject_industry_profile(profile)
+        propagation.propagate_to_macro()
+        propagation.propagate_policy()
+        propagation.build_macro_network()
 
-        graph_hash = builder.hash_graph()
-        with open(f"{output_dir}/hash.txt", "w") as f:
-            f.write(graph_hash)
+        nodes, edges = engine.export()
 
-        print("Graph built successfully")
-        print("Nodes:", len(nodes_df))
-        print("Edges:", len(edges_df))
-        print("Hash:", graph_hash)
+        return nodes, edges

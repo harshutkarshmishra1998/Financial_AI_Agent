@@ -21,8 +21,8 @@ Propose additional economically meaningful dependency nodes and edges.
 
 JSON format:
 {{
- "nodes":[{{"name":"","type":""}}],
- "edges":[{{"source":"","target":"","relation":""}}]
+    "nodes":[{{"name":"","type":""}}],
+    "edges":[{{"source":"","target":"","relation":""}}]
 }}
 """
 
@@ -32,4 +32,4 @@ JSON format:
             messages=[{"role": "user", "content": prompt}]
         )
 
-        return json.loads(resp.choices[0].message.content)
+        return json.loads(resp.choices[0].message.content) #type: ignore

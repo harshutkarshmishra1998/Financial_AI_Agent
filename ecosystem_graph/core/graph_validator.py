@@ -1,3 +1,5 @@
+# ecosystem_graph/core/graph_validator.py
+
 import pandas as pd
 
 
@@ -6,18 +8,20 @@ class GraphValidator:
     def __init__(self, builder):
         self.b = builder
 
-    def ensure_macro_presence(self):
-        macros = [n for n, d in self.b.graph.nodes(data=True) if d["type"] == "macro"]
-        if not macros:
-            raise ValueError("Macro layer missing")
+    def ensure_non_empty(self):
+        if len(self.b.graph.nodes) <= 1:
+            raise ValueError("Graph expansion failed")
 
-    def to_dataframes(self):
-        nodes = []
-        for n, d in self.b.graph.nodes(data=True):
-            nodes.append({"node": n, **d})
+    def to_frames(self):
 
-        edges = []
-        for u, v, d in self.b.graph.edges(data=True):
-            edges.append({"source": u, "target": v, **d})
+        nodes = [
+            {"node": n, **d}
+            for n, d in self.b.graph.nodes(data=True)
+        ]
+
+        edges = [
+            {"source": u, "target": v, **d}
+            for u, v, d in self.b.graph.edges(data=True)
+        ]
 
         return pd.DataFrame(nodes), pd.DataFrame(edges)
