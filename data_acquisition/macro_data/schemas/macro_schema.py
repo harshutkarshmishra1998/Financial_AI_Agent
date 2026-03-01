@@ -1,3 +1,0 @@
-from data_acquisition.common.schema_registry import SchemaRegistry
-
-MACRO_SCHEMA = SchemaRegistry.MACRO_INDICATOR
