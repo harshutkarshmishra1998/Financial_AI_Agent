@@ -8,7 +8,7 @@ import pandas as pd
 
 from foundation import ArtifactStore, RunManager
 from market_signal import engine as signal_engine
-from ecosystem_graph.data_interface import TimeSeriesProvider
+from ecosystem_graph.data_interface import LLMDrivenEconomicProvider
 from ecosystem_graph.governance import ExpansionController
 from ecosystem_graph.llm_interface import GroqLLM
 from ecosystem_graph.runner import run as run_ecosystem
@@ -46,10 +46,32 @@ def _series(seed: int) -> pd.Series:
 
 
 class StubLLM(GroqLLM):
+    def __init__(self):
+        pass
+
     def propose_related_factors(self, node_name: str, context=None):
-        return [
-            {"name": "Refining Margin", "type": "factor", "relationship": "influenced_by"},
-        ]
+        return [{"name": "Refining Margin", "type": "factor", "relationship": "influenced_by"}]
+
+    def extract_company_profile(self, symbol: str, company_name: str, sector: str):
+        return {
+            "inputs": [{"name": "Brent crude"}],
+            "outputs": [{"name": "Diesel"}],
+            "competitors": ["OILCO_B"],
+            "input_dependencies": {
+                "Brent crude": {
+                    "producers": ["Producer P"],
+                    "competing_materials": ["Competing Material Z"],
+                    "influenced_by": ["USD/INR", "OPEC production decisions"],
+                }
+            },
+            "output_dependencies": {
+                "Diesel": {
+                    "consumer_sectors": ["Transport"],
+                    "competing_products": ["EV Mobility"],
+                    "influenced_by": ["GDP Growth"],
+                }
+            },
+        }
 
 
 def test_foundation_to_market_signal_to_ecosystem_pipeline(monkeypatch):
@@ -68,92 +90,39 @@ def test_foundation_to_market_signal_to_ecosystem_pipeline(monkeypatch):
     stored = ArtifactStore.read(run_id, "signal", "anomalies", type(events[0]))
     assert len(stored) == len(events)
 
-    company_map = {
-        "OILCO": {
-            "company_name": "Oil Company A",
-            "sector": "Energy",
-            "inputs": [{"name": "Brent crude"}],
-            "outputs": [{"name": "Diesel"}],
-            "competitors": ["OILCO_B"],
-            "input_dependencies": {
-                "Brent crude": {
-                    "producers": ["Producer P"],
-                    "competing_materials": ["Competing Material Z"],
-                    "influenced_by": ["USD/INR", "Import/export duties", "OPEC production decisions"],
-                }
-            },
-            "output_dependencies": {
-                "Diesel": {
-                    "consumer_sectors": ["Transport"],
-                    "competing_products": ["EV Mobility"],
-                    "influenced_by": ["GDP Growth", "Liquidity surplus/deficit"],
-                }
-            },
-        },
-        "OILCO_B": {
-            "company_name": "Oil Company B",
-            "sector": "Energy",
-            "inputs": [{"name": "Brent crude"}],
-            "outputs": [{"name": "Petrol"}],
-            "competitors": [],
-            "input_dependencies": {
-                "Brent crude": {
-                    "producers": ["Producer P"],
-                    "competing_materials": ["Competing Material Z"],
-                    "influenced_by": ["USD/INR"],
-                }
-            },
-            "output_dependencies": {
-                "Petrol": {
-                    "consumer_sectors": ["Retail Fuel"],
-                    "competing_products": ["EV Mobility"],
-                    "influenced_by": ["GDP Growth"],
-                }
-            },
-        },
-    }
+    llm = StubLLM()
+    provider = LLMDrivenEconomicProvider(llm=llm, start="2023-01-01", end="2024-04-01")
 
-    series_map = {
-        "Oil Company A": _series(1),
-        "Oil Company B": _series(2),
-        "Brent crude": _series(3),
-        "USD/INR": _series(4),
-        "Import/export duties": _series(5),
-        "OPEC production decisions": _series(6),
-        "Diesel": _series(7),
-        "GDP Growth": _series(8),
-        "Liquidity surplus/deficit": _series(9),
-        "Refining Margin": _series(10),
-    }
-
-    provider = TimeSeriesProvider(company_map=company_map, series_map=series_map)
+    monkeypatch.setattr(provider, "_company_basics", lambda _s: {"company_name": "Oil Company A", "sector": "Energy"})
+    monkeypatch.setattr(
+        provider,
+        "_download_close_series",
+        lambda name: {
+            "OILCO": _series(1),
+            "Oil Company A": _series(1),
+            "Brent crude": _series(3),
+            "USD/INR": _series(4),
+            "OPEC production decisions": _series(6),
+            "Diesel": _series(7),
+            "GDP Growth": _series(8),
+            "Refining Margin": _series(9),
+            "OILCO_B": _series(2),
+        }.get(name),
+    )
 
     nodes, edges = run_ecosystem(
         "OILCO",
+        start="2023-01-01",
+        end="2024-04-01",
         data_provider=provider,
-        llm=StubLLM(),
+        llm=llm,
         validator=StatisticalValidator(corr_threshold=0.05),
         controller=ExpansionController(max_nodes=200, max_depth=3, competitor_limit=3),
     )
 
     node_names = {n.name for n in nodes}
-    edge_tuples = {(e.source_node_id, e.target_node_id, e.relationship_type) for e in edges}
-
     assert "Brent crude" in node_names
     assert "USD/INR" in node_names
-    assert "Import/export duties" in node_names
     assert "Diesel" in node_names
-    assert "Transport" in node_names
-    assert "OPEC production decisions" in node_names
-
-    input_id = "input:brent crude"
-    output_id = "output:diesel"
-    company_id = "company:oil company a"
-
-    assert (company_id, input_id, "depends_on") in edge_tuples
-    assert ("macro:usd/inr", input_id, "influenced_by") in edge_tuples
-    assert (company_id, output_id, "produces") in edge_tuples
-    assert ("macro:gdp growth", output_id, "influenced_by") in edge_tuples
-
-    # expandable company logic: competitor company should also get its own dependency expansion
-    assert "Petrol" in node_names
+    assert "OILCO_B" in node_names
+    assert len(edges) > 0

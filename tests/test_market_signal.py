@@ -1,113 +1,57 @@
-from foundation import RunManager
-from market_signal.engine import run
-from market_signal.features import engineer_features
-
-from market_signal.advanced_plots import (
-    plot_full_signal_context,
-    anomaly_heatmap,
-    regime_visualizer,
-    signal_vs_volatility,
-    multi_symbol_overlay
-)
-
-import pandas as pd
-import numpy as np
+import argparse
 from pathlib import Path
 
+import pandas as pd
+
+from foundation import RunManager
+from market_signal.engine import run as run_signal
+from market_signal.advanced_plots import (
+    anomaly_heatmap,
+    plot_full_signal_context,
+    regime_visualizer,
+    signal_vs_volatility,
+)
+from ecosystem_graph.runner import run as run_ecosystem
+from ecosystem_graph.serializer import save_graph
 from tests.test_foundation import clear_directory
 
 
-# =========================================================
-# 1️⃣ FEATURE ENGINEERING TEST
-# =========================================================
-
-# def feature_engineering_test():
-
-#     print("\n==============================")
-#     print("FEATURE ENGINEERING TEST")
-#     print("==============================")
-
-#     df = pd.DataFrame({
-#         "open": np.random.rand(100),
-#         "high": np.random.rand(100),
-#         "low": np.random.rand(100),
-#         "close": np.random.rand(100),
-#         "volume": np.random.randint(1000, 5000, 100),
-#     })
-
-#     df.index = pd.date_range("2020-01-01", periods=100)
-
-#     result = engineer_features(df)
-
-#     print("\nFeature dataframe preview:")
-#     print(result.head())
-
-
-# =========================================================
-# 2️⃣ SIGNAL ENGINE RUN
-# =========================================================
-
-ticker = "TCS.NS"
-
-def run_signal_engine():
-
+def run_signal_engine(symbol: str, start: str, end: str):
     print("\n==============================")
     print("SIGNAL ENGINE RUN")
     print("==============================")
 
     run_id = RunManager.new_run()
-
-    events = run(
-        # symbol="RELIANCE.NS",
-        symbol=ticker,
-        start="2020-02-01",
-        end="2020-04-01",
-        run_id=run_id
-    )
+    events = run_signal(symbol=symbol, start=start, end=end, run_id=run_id)
 
     print("\nDetected Events:")
-    for e in events:
-        print(e)
+    for event in events:
+        print(event)
 
     return run_id, events
 
 
-# =========================================================
-# 3️⃣ KNOWN EVENT VALIDATION
-# =========================================================
-
-def validate_known_event(events):
-
+def run_ecosystem_engine(symbol: str, start: str, end: str, run_id: str):
     print("\n==============================")
-    print("KNOWN EVENT VALIDATION")
+    print("ECOSYSTEM GRAPH RUN")
     print("==============================")
 
-    detected_months = [
-        e.event_timestamp.strftime("%Y-%m")
-        for e in events
-    ]
+    nodes, edges = run_ecosystem(symbol=symbol, start=start, end=end)
 
-    print("\nDetected months:")
-    print(detected_months)
+    graph_dir = Path("data") / run_id / "ecosystem"
+    graph_dir.mkdir(parents=True, exist_ok=True)
+    save_graph(nodes, edges, path=str(graph_dir) + "/")
 
-    if any("2020-03" in m for m in detected_months):
-        print("\n✅ DETECTED COVID CRASH!")
-    else:
-        print("\n❌ COVID CRASH NOT DETECTED")
+    print(f"Graph saved: nodes={len(nodes)}, edges={len(edges)} @ {graph_dir}")
+    return nodes, edges
 
-
-# =========================================================
-# 4️⃣ JSONL CHECK
-# =========================================================
 
 def verify_json_export(run_id):
-
     print("\n==============================")
     print("JSON EXPORT CHECK")
     print("==============================")
 
     path = Path("data") / run_id / "signal" / "anomalies.jsonl"
-
     if not path.exists():
         print("❌ anomalies.jsonl not found")
         return None
@@ -115,54 +59,51 @@ def verify_json_export(run_id):
     df = pd.read_json(path, lines=True)
     print("\nJSONL Preview:")
     print(df.head())
-
     return df
 
 
-# =========================================================
-# 5️⃣ VISUAL ANALYTICS
-# =========================================================
-
-def run_visual_analytics(run_id):
-
+def run_visual_analytics(run_id: str, symbol: str):
     print("\n==============================")
     print("ADVANCED VISUAL ANALYTICS")
     print("==============================")
 
-    # full market context (offline)
-    plot_full_signal_context(run_id, ticker)
-
-    # heatmap
+    plot_full_signal_context(run_id, symbol)
     anomaly_heatmap(run_id)
-
-    # regime segmentation
     regime_visualizer(run_id)
-
-    # phase diagram
     signal_vs_volatility(run_id)
 
-    # overlay (single run example)
-    # multi_symbol_overlay([run_id])
 
+def parse_args():
+    parser = argparse.ArgumentParser(description="Run market signal + ecosystem graph pipeline")
+    parser.add_argument("--symbol", type=str, required=True, help="Ticker symbol (e.g. TCS.NS)")
+    parser.add_argument("--start", type=str, required=True, help="Start date YYYY-MM-DD")
+    parser.add_argument("--end", type=str, required=True, help="End date YYYY-MM-DD")
+    parser.add_argument(
+        "--skip-plots",
+        action="store_true",
+        help="Skip plot generation (useful in headless environments)",
+    )
+    parser.add_argument(
+        "--keep-data",
+        action="store_true",
+        help="Do not clear existing data/ before running",
+    )
+    return parser.parse_args()
 
-# =========================================================
-# MAIN RUNNER
-# =========================================================
 
 if __name__ == "__main__":
+    args = parse_args()
 
-    print("\n\nPHASE-1 FULL SYSTEM INSPECTION\n")
+    print("\n\nPHASE-1+2 FULL SYSTEM INSPECTION\n")
 
-    clear_directory("data")
+    if not args.keep_data:
+        clear_directory("data")
 
-    # feature_engineering_test()
-
-    run_id, events = run_signal_engine()
-
-    validate_known_event(events)
-
+    run_id, events = run_signal_engine(args.symbol, args.start, args.end)
     verify_json_export(run_id)
+    run_ecosystem_engine(args.symbol, args.start, args.end, run_id)
 
-    run_visual_analytics(run_id)
+    if not args.skip_plots:
+        run_visual_analytics(run_id, args.symbol)
 
-    print("\n\nPHASE-1 INSPECTION COMPLETE\n")
+    print("\n\nPIPELINE INSPECTION COMPLETE\n")
