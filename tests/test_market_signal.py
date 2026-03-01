@@ -16,6 +16,8 @@ def parse_args():
     )
     return parser.parse_args()
 
+    print(f"Graph saved: nodes={len(nodes)}, edges={len(edges)} @ {graph_dir}")
+    return nodes, edges
 
 if __name__ == "__main__":
     args = parse_args()
