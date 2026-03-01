@@ -26,6 +26,9 @@ class EcosystemGraphEngine:
         if src == dst:
             return
         self.graph.add_edge(src, dst, relation=relation)
+    
+    def has_node(self, name):
+        return name in self.graph.nodes
 
     # ------------------------
     # Public API

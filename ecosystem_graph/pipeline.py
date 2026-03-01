@@ -4,6 +4,8 @@ from ecosystem_graph.data.market_universe import MarketUniverse
 from ecosystem_graph.data.ontology import INDUSTRY_DEPENDENCY_PROFILE
 from ecosystem_graph.core.graph_engine import EcosystemGraphEngine
 from ecosystem_graph.core.propagation import PropagationEngine
+from ecosystem_graph.groq_client import GroqLLM
+from ecosystem_graph.expansion.supply_demand_expander import SupplyDemandExpander
 
 
 class EcosystemPipeline:
@@ -69,6 +71,20 @@ class EcosystemPipeline:
         propagation.build_macro_network()
 
         self._inject_sector_competitors(engine, symbol, industry)
+
+        llm = GroqLLM()
+
+        expander = SupplyDemandExpander(
+            graph_engine=engine,
+            llm=llm,
+            max_depth=3,
+            max_children_per_node=4
+        )
+
+        expander.expand(
+            root_node=ticker,
+            sector=industry
+        )
 
         nodes, edges = engine.export()
 
