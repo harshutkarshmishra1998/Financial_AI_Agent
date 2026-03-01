@@ -1,27 +1,17 @@
-from .engine import EcosystemGraphEngine, GraphNode
-from .llm_interface import GroqLLM
 from .data_interface import TimeSeriesProvider
-from .validation import StatisticalValidator
+from .engine import EcosystemGraphEngine
 from .governance import ExpansionController
+from .llm_interface import GroqLLM
+from .validation import StatisticalValidator
 
 
-def run(symbol):
-
-    seed = GraphNode(
-        id=symbol,
-        name=symbol,
-        node_type="company",
-        economic_layer="core"
-    )
-
+def run(symbol, data_provider=None, llm=None, validator=None, controller=None):
     engine = EcosystemGraphEngine(
-        llm=GroqLLM(),
-        data_provider=TimeSeriesProvider(), 
-        validator=StatisticalValidator(),
-        controller=ExpansionController()
+        llm=llm or GroqLLM(),
+        data_provider=data_provider or TimeSeriesProvider(),
+        validator=validator or StatisticalValidator(),
+        controller=controller or ExpansionController(),
     )
 
-    engine.add_node(seed)
-    engine.expand(seed)
-
-    return engine.nodes, engine.edges
+    bundle = engine.build(symbol)
+    return bundle.nodes, bundle.edges
