@@ -6,6 +6,7 @@ from ecosystem_graph.core.graph_engine import EcosystemGraphEngine
 from ecosystem_graph.core.propagation import PropagationEngine
 from ecosystem_graph.groq_client import GroqLLM
 from ecosystem_graph.expansion.supply_demand_expander import SupplyDemandExpander
+from ecosystem_graph.expansion.company_dependency_expander import CompanyDependencyExpander
 
 
 class EcosystemPipeline:
@@ -83,6 +84,17 @@ class EcosystemPipeline:
 
         expander.expand(
             root_node=ticker,
+            sector=industry
+        )
+
+        dependency_expander = CompanyDependencyExpander(
+            graph_engine=engine,
+            llm=llm,
+            max_partners_per_type=5
+        )
+
+        dependency_expander.expand(
+            company_ticker=ticker,
             sector=industry
         )
 

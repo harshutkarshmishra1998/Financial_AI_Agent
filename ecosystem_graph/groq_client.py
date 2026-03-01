@@ -10,7 +10,7 @@ class GroqLLM:
 
     def __init__(
         self,
-        model="llama3-70b-8192",
+        model="llama-3.3-70b-versatile",
         temperature=0.2
     ):
         self.client = Groq()
@@ -27,4 +27,4 @@ class GroqLLM:
             ]
         )
 
-        return completion.choices[0].message.content
+        return completion.choices[0].message.content #type: ignore
