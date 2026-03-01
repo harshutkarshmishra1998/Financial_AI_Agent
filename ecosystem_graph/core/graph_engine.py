@@ -23,6 +23,8 @@ class EcosystemGraphEngine:
             self.graph.add_node(name, type=node_type)
 
     def _add_edge(self, src, dst, relation):
+        if src == dst:
+            return
         self.graph.add_edge(src, dst, relation=relation)
 
     # ------------------------
