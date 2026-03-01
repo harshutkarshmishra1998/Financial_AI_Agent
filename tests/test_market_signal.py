@@ -60,8 +60,8 @@ def run_signal_engine():
     events = run(
         # symbol="RELIANCE.NS",
         symbol=ticker,
-        start="2019-01-01",
-        end="2021-01-01",
+        start="2020-02-01",
+        end="2020-04-01",
         run_id=run_id
     )
 

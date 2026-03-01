@@ -63,10 +63,16 @@ def engineer_features(df: pd.DataFrame) -> pd.DataFrame:
     df = df.replace([np.inf, -np.inf], np.nan)
     df = df.dropna()
 
-    # -------------------------
-    # feature scaling (critical)
-    # -------------------------
     feature_cols = ["log_return", "z_score", "volume_z"]
+
+    # --------------------------------------------------
+    # DATA SUFFICIENCY GUARD (CRITICAL)
+    # --------------------------------------------------
+    if len(df) < 5:
+        raise ValueError(
+            "Insufficient data after feature engineering. "
+            f"Remaining rows: {len(df)}"
+        )
 
     scaler = StandardScaler()
     df[feature_cols] = scaler.fit_transform(df[feature_cols])
