@@ -15,8 +15,13 @@ class FAISSStore:
         self.meta.extend(meta)
 
     def search(self, query_emb, k=5):
+        if not self.texts:
+            return []
+        k = min(k, len(self.texts))
         D, I = self.index.search(query_emb, k)
         results = []
         for idx in I[0]:
+            if idx < 0:
+                continue
             results.append((self.texts[idx], self.meta[idx]))
         return results
