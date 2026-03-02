@@ -48,11 +48,11 @@
 <node id="CrudePrice">
   <data key="d0">supply</data>
 </node>
-<node id="RefineryCapacity">
-  <data key="d0">supply</data>
-</node>
 <node id="FuelDemand">
   <data key="d0">demand</data>
+</node>
+<node id="RefineryCapacity">
+  <data key="d0">supply</data>
 </node>
 <node id="EnergyConsumption">
   <data key="d0">demand</data>
@@ -64,12 +64,6 @@
   <data key="d0">supply</data>
 </node>
 <node id="InventoryLevels">
-  <data key="d0">supply</data>
-</node>
-<node id="Investment">
-  <data key="d0">supply</data>
-</node>
-<node id="CrudePrices">
   <data key="d0">supply</data>
 </node>
 <node id="OilPrice">
@@ -84,6 +78,12 @@
 <node id="RefineryOutput">
   <data key="d0">supply</data>
 </node>
+<node id="Investment">
+  <data key="d0">supply</data>
+</node>
+<node id="LaborCost">
+  <data key="d0">supply</data>
+</node>
 <node id="FuelPrice">
   <data key="d0">demand</data>
 </node>
@@ -93,26 +93,23 @@
 <node id="GlobalGDP">
   <data key="d0">demand</data>
 </node>
-<node id="ProductionCost">
+<node id="OilReserves">
   <data key="d0">supply</data>
 </node>
-<node id="OilPrices">
-  <data key="d0">supply</data>
-</node>
-<node id="Inventory">
-  <data key="d0">supply</data>
-</node>
-<node id="ProductionCosts">
-  <data key="d0">supply</data>
-</node>
-<node id="StorageCapacity">
+<node id="ExtractionCost">
   <data key="d0">supply</data>
 </node>
 <node id="EnergyPrices">
   <data key="d0">demand</data>
 </node>
-<node id="DrillingCost">
+<node id="ProductionCosts">
   <data key="d0">supply</data>
+</node>
+<node id="FuelPrices">
+  <data key="d0">demand</data>
+</node>
+<node id="EnergyDemand">
+  <data key="d0">demand</data>
 </node>
 <node id="USInventory">
   <data key="d0">supply</data>
@@ -126,17 +123,23 @@
 <node id="Imports">
   <data key="d0">supply</data>
 </node>
-<node id="RefiningCapacity">
-  <data key="d0">supply</data>
-</node>
-<node id="ConsumerSpending">
-  <data key="d0">demand</data>
-</node>
 <node id="CrudeOilPrice">
   <data key="d0">supply</data>
 </node>
 <node id="TransportationCost">
   <data key="d0">demand</data>
+</node>
+<node id="RefiningCapacity">
+  <data key="d0">supply</data>
+</node>
+<node id="DrillingCost">
+  <data key="d0">supply</data>
+</node>
+<node id="WageRate">
+  <data key="d0">supply</data>
+</node>
+<node id="Inflation">
+  <data key="d0">supply</data>
 </node>
 <node id="LaborCosts">
   <data key="d0">supply</data>
@@ -201,11 +204,11 @@
 <edge source="RELIANCE.NS" target="CrudePrice">
   <data key="d1">supply</data>
 </edge>
-<edge source="RELIANCE.NS" target="RefineryCapacity">
-  <data key="d1">supply</data>
-</edge>
 <edge source="RELIANCE.NS" target="FuelDemand">
   <data key="d1">demand</data>
+</edge>
+<edge source="RELIANCE.NS" target="RefineryCapacity">
+  <data key="d1">supply</data>
 </edge>
 <edge source="RELIANCE.NS" target="EnergyConsumption">
   <data key="d1">demand</data>
@@ -279,12 +282,6 @@
 <edge source="CrudePrice" target="InventoryLevels">
   <data key="d1">supply</data>
 </edge>
-<edge source="RefineryCapacity" target="Investment">
-  <data key="d1">supply</data>
-</edge>
-<edge source="RefineryCapacity" target="CrudePrices">
-  <data key="d1">supply</data>
-</edge>
 <edge source="FuelDemand" target="OilPrice">
   <data key="d1">demand</data>
 </edge>
@@ -297,6 +294,12 @@
 <edge source="FuelDemand" target="RefineryOutput">
   <data key="d1">supply</data>
 </edge>
+<edge source="RefineryCapacity" target="Investment">
+  <data key="d1">supply</data>
+</edge>
+<edge source="RefineryCapacity" target="LaborCost">
+  <data key="d1">supply</data>
+</edge>
 <edge source="EnergyConsumption" target="FuelPrice">
   <data key="d1">demand</data>
 </edge>
@@ -306,26 +309,23 @@
 <edge source="GlobalDemand" target="GlobalGDP">
   <data key="d1">demand</data>
 </edge>
-<edge source="GlobalDemand" target="ProductionCost">
+<edge source="OPECProduction" target="OilReserves">
   <data key="d1">supply</data>
 </edge>
-<edge source="OPECProduction" target="OilPrices">
+<edge source="OPECProduction" target="ExtractionCost">
   <data key="d1">supply</data>
 </edge>
-<edge source="OPECProduction" target="Inventory">
-  <data key="d1">supply</data>
+<edge source="OPECProduction" target="EnergyPrices">
+  <data key="d1">demand</data>
 </edge>
 <edge source="InventoryLevels" target="ProductionCosts">
   <data key="d1">supply</data>
 </edge>
-<edge source="InventoryLevels" target="StorageCapacity">
-  <data key="d1">supply</data>
-</edge>
-<edge source="InventoryLevels" target="EnergyPrices">
+<edge source="InventoryLevels" target="FuelPrices">
   <data key="d1">demand</data>
 </edge>
-<edge source="Investment" target="DrillingCost">
-  <data key="d1">supply</data>
+<edge source="InventoryLevels" target="EnergyDemand">
+  <data key="d1">demand</data>
 </edge>
 <edge source="OilPrice" target="USInventory">
   <data key="d1">supply</data>
@@ -339,17 +339,23 @@
 <edge source="GDP" target="Imports">
   <data key="d1">supply</data>
 </edge>
-<edge source="FuelTax" target="RefiningCapacity">
+<edge source="FuelTax" target="CrudeOilPrice">
   <data key="d1">supply</data>
 </edge>
-<edge source="FuelTax" target="ConsumerSpending">
+<edge source="FuelTax" target="TransportationCost">
   <data key="d1">demand</data>
 </edge>
-<edge source="RefineryOutput" target="CrudeOilPrice">
+<edge source="RefineryOutput" target="RefiningCapacity">
   <data key="d1">supply</data>
 </edge>
-<edge source="FuelPrice" target="TransportationCost">
-  <data key="d1">demand</data>
+<edge source="Investment" target="DrillingCost">
+  <data key="d1">supply</data>
+</edge>
+<edge source="LaborCost" target="WageRate">
+  <data key="d1">supply</data>
+</edge>
+<edge source="LaborCost" target="Inflation">
+  <data key="d1">supply</data>
 </edge>
 <edge source="OilProduction" target="LaborCosts">
   <data key="d1">supply</data>
