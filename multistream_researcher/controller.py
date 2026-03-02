@@ -21,6 +21,16 @@ class Phase3Researcher:
         for q in queries[:10]:
             docs.extend(search_and_load(q))
 
+        if not docs:
+            docs = [{
+                "content": (
+                    f"No web documents were fetched for {anomaly_event.get('symbol', 'unknown symbol')} "
+                    f"around {anomaly_event.get('timestamp', 'unknown date')}. "
+                    f"Tracked graph nodes: {', '.join(graph_nodes)}."
+                ),
+                "url": None,
+            }]
+
         texts = []
         meta = []
 
@@ -37,10 +47,7 @@ class Phase3Researcher:
                 })
         
         if not texts:
-            raise RuntimeError(
-                "No documents retrieved during ingestion. "
-                "Check search connector or internet access."
-            )
+            raise RuntimeError("No usable text generated during ingestion.")
 
         embeddings = self.embedder.encode(texts)
 
@@ -49,6 +56,8 @@ class Phase3Researcher:
         print("Index dimension:", embeddings.shape)
 
     def retrieve(self, query):
+        if self.store is None:
+            raise RuntimeError("Index not initialized. Call ingest() before retrieve().")
         qemb = self.embedder.encode([query])
         # print("Query dimension:", qemb.shape)
         results = self.store.search(qemb, 5)
