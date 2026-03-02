@@ -19,6 +19,7 @@ from market_signal.advanced_plots import (
 
 from ecosystem_graph.pipeline import EcosystemPipeline
 from ecosystem_graph.visualize_graph import draw_ecosystem_graph
+from ecosystem_graph.save_graph import save_graph_structure
 
 
 def clear_directory(folder_path: str | Path):
@@ -110,6 +111,8 @@ def run_full_system():
     signal_vs_volatility(run_id)
     plt.savefig(plots_dir / "phase.png")
     plt.close()
+
+    save_graph_structure(nodes, edges, run_dir)
 
     print(f"All outputs saved → {run_dir}")
 
