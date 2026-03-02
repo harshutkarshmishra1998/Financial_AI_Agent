@@ -1,82 +1,148 @@
-import networkx as nx
-import matplotlib.pyplot as plt
+from pyvis.network import Network
 
 
-def draw_ecosystem_graph(nodes, edges, output_file="ecosystem_v1.png"):
+def draw_ecosystem_graph(
+    nodes,
+    edges,
+    output_file="data/ecosystem_interactive.html"
+):
+    """
+    Interactive Financial Ecosystem Graph
+    - hover edge to see relation
+    - zoom / pan
+    - physics layout
+    - color legend
+    """
 
-    G = nx.DiGraph()
+    net = Network(
+        height="900px",
+        width="100%",
+        directed=True,
+        bgcolor="#ffffff",
+        font_color="#000000" #type: ignore
+    )
 
-    # -----------------------
-    # Add Nodes
-    # -----------------------
-    node_colors = []
-
-    color_map = {
-        "company": "#1f77b4",   # blue
-        "macro": "#ff7f0e",     # orange
-        "global": "#2ca02c",    # green
-        "policy": "#d62728",    # red
+    # ---------------------------------------------------
+    # Node Colors
+    # ---------------------------------------------------
+    node_colors = {
+        "company": "#1f77b4",
+        "macro": "#ff7f0e",
+        "global": "#2ca02c",
+        "policy": "#d62728",
+        "supply": "#7f7f7f",
+        "demand": "#bcbd22",
+        "supplier": "#9467bd"
     }
 
+    # ---------------------------------------------------
+    # Add Nodes
+    # ---------------------------------------------------
     for n in nodes:
         node_id = n["node"]
         node_type = n.get("type", "macro")
 
-        G.add_node(node_id, node_type=node_type)
-        node_colors.append(color_map.get(node_type, "#7f7f7f"))
-
-    # -----------------------
-    # Add Edges
-    # -----------------------
-    for e in edges:
-        G.add_edge(
-            e["source"],
-            e["target"],
-            relation=e.get("relation", "")
+        net.add_node(
+            node_id,
+            label=node_id,
+            color=node_colors.get(node_type, "#cccccc"),
+            title=f"Type: {node_type}",   # hover tooltip
+            size=20
         )
 
-    # -----------------------
-    # Layout
-    # -----------------------
-    plt.figure(figsize=(14, 8))
+    # ---------------------------------------------------
+    # Edge Colors by Relation
+    # ---------------------------------------------------
+    relation_colors = {
+        "supply": "#1f77b4",
+        "demand": "#ff7f0e",
+        "competes_with": "#aaaaaa",
+        "influenced_by": "#2ca02c",
+        "impacts": "#2ca02c",
+        "transmits_to": "#2ca02c",
+        "regulated_by": "#d62728",
+        "supplies_to": "#9467bd"
+    }
 
-    pos = nx.spring_layout(G, k=1.2, iterations=100)
+    # ---------------------------------------------------
+    # Add Edges
+    # ---------------------------------------------------
+    for e in edges:
+        relation = e.get("relation", "")
 
-    nx.draw_networkx_nodes(
-        G,
-        pos,
-        node_color=node_colors, #type: ignore
-        node_size=3000
+        color = "#444444"
+        for key, val in relation_colors.items():
+            if key in relation:
+                color = val
+                break
+
+        net.add_edge(
+            e["source"],
+            e["target"],
+            title=relation,   # hover shows relation name
+            color=color,
+            arrows="to"
+        )
+
+    # ---------------------------------------------------
+    # Physics Layout (nice separation)
+    # ---------------------------------------------------
+    net.barnes_hut(
+        gravity=-8000,
+        central_gravity=0.3,
+        spring_length=200,
+        spring_strength=0.05,
+        damping=0.09
     )
 
-    nx.draw_networkx_edges(
-        G,
-        pos,
-        arrowstyle="->",
-        arrowsize=20,
-        width=2
-    )
+    # ---------------------------------------------------
+    # LEGEND (HTML overlay)
+    # ---------------------------------------------------
+    legend_html = """
+    <div style="
+        position: fixed;
+        bottom: 20px;
+        left: 20px;
+        background: white;
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font-family: Arial;
+        font-size: 13px;
+        box-shadow: 0px 0px 8px rgba(0,0,0,0.2);
+        z-index: 9999;
+    ">
+    <b>Relation Types</b><br><br>
 
-    nx.draw_networkx_labels(
-        G,
-        pos,
-        font_size=10,
-        font_weight="bold"
-    )
+    <span style="color:#1f77b4;">■</span> Supply<br>
+    <span style="color:#ff7f0e;">■</span> Demand<br>
+    <span style="color:#2ca02c;">■</span> Influence / Impact / Transmission<br>
+    <span style="color:#d62728;">■</span> Regulation<br>
+    <span style="color:#aaaaaa;">■</span> Competition<br>
+    <span style="color:#9467bd;">■</span> Supplier Link<br>
+    <span style="color:#444444;">■</span> Other<br>
+    </div>
+    """
 
-    # Edge labels
-    edge_labels = nx.get_edge_attributes(G, "relation")
-    nx.draw_networkx_edge_labels(
-        G,
-        pos,
-        edge_labels=edge_labels,
-        font_size=8
-    )
+    net.set_options("""
+    {
+    "interaction": {
+        "hover": true,
+        "navigationButtons": true,
+        "keyboard": true}
+    }
+    """)
 
-    plt.title("Financial Ecosystem Graph (v1)", fontsize=14)
-    plt.axis("off")
-    plt.tight_layout()
-    plt.savefig(output_file, dpi=300)
-    plt.close()
+    # net.show(output_file)
+    net.write_html(output_file, open_browser=True, notebook=False)
 
-    print(f"Graph saved to {output_file}")
+    # inject legend into html
+    with open(output_file, "r", encoding="utf-8") as f:
+        html = f.read()
+
+    html = html.replace("</body>", legend_html + "</body>")
+
+    with open(output_file, "w", encoding="utf-8") as f:
+        f.write(html)
+
+    print(f"Interactive graph saved → {output_file}")
