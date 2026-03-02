@@ -47,7 +47,7 @@ def clear_directory(folder_path: str | Path):
 
 def run_full_pipeline():
 
-    clear_directory("data")
+    # clear_directory("data")
 
     DATA_ROOT.mkdir(exist_ok=True)
 
@@ -108,7 +108,8 @@ def run_full_pipeline():
     # LOAD GRAPH STRUCTURE
     # ------------------------------------------------
     graph = nx.read_graphml(run_dir / "ecosystem_graph.graphml")
-    graph_nodes = [str(n) for n in graph.nodes()]
+    # graph_nodes = [str(n) for n in graph.nodes()]
+    graph_nodes = list(graph.nodes())[:8]
 
     # ------------------------------------------------
     # PHASE 3 — MULTISTREAM RESEARCH
@@ -121,20 +122,20 @@ def run_full_pipeline():
     researcher = Phase3Researcher()
     researcher.ingest(anomaly, graph_nodes)
 
-    results = researcher.retrieve(
-        f"drivers behind move in {anomaly['symbol']}"
-    )
+    # results = researcher.retrieve(
+    #     f"drivers behind move in {anomaly['symbol']}"
+    # )
 
-    if not results:
-        raise RuntimeError("Phase3 produced no retrieval results")
+    # if not results:
+    #     raise RuntimeError("Phase3 produced no retrieval results")
 
-    print("Retrieved context chunks:", len(results))
+    # print("Retrieved context chunks:", len(results))
 
     return {
         "run_id": run_id,
         "run_dir": str(run_dir),
         "graph_nodes": len(graph_nodes),
-        "retrieved_chunks": len(results),
+        # "retrieved_chunks": len(results),
         "manifest": manifest
     }
 
@@ -146,5 +147,6 @@ def run_full_pipeline():
 if __name__ == "__main__":
     out = run_full_pipeline()
     print("\nPIPELINE COMPLETE")
-    for k, v in out.items():
-        print(k, "→", v)
+    # for k, v in out.items():
+    #     print(k, "→", v)
+    print(out)

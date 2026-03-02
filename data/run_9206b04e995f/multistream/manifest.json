@@ -1,0 +1,13 @@
+{
+  "news_parquet": "data\\run_9206b04e995f\\multistream\\news.parquet",
+  "macro_parquet": "data\\run_9206b04e995f\\multistream\\macro.parquet",
+  "stock_parquet": "data\\run_9206b04e995f\\multistream\\stock.parquet",
+  "news_faiss": "data\\run_9206b04e995f\\multistream\\news.faiss",
+  "macro_faiss": "data\\run_9206b04e995f\\multistream\\macro.faiss",
+  "stock_faiss": "data\\run_9206b04e995f\\multistream\\stock.faiss",
+  "rows": {
+    "news": 24,
+    "macro": 8,
+    "stock": 5
+  }
+}
