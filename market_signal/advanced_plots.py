@@ -44,7 +44,7 @@ def multi_symbol_overlay(run_ids):
     plt.ylabel("Signal Strength")
     plt.legend()
     plt.grid(True)
-    plt.show()
+    # plt.show()
 
 
 # =========================================================
@@ -69,7 +69,7 @@ def anomaly_heatmap(run_id):
     plt.title("Monthly Anomaly Intensity")
     plt.yticks([])
     plt.xticks(rotation=45)
-    plt.show()
+    # plt.show()
 
 
 # =========================================================
@@ -87,7 +87,7 @@ def regime_visualizer(run_id, threshold=0.7):
     plt.title("High-Volatility Regime Detection")
     plt.ylabel("Regime (1 = High)")
     plt.grid(True)
-    plt.show()
+    # plt.show()
 
 
 # =========================================================
@@ -109,7 +109,7 @@ def signal_vs_volatility(run_id):
     plt.ylabel("Anomaly Confidence")
     plt.title("Signal vs Volatility Phase Space")
     plt.grid(True)
-    plt.show()
+    # plt.show()
 
 # =========================================================
 # FULL SIGNAL CONTEXT PLOT (OFFLINE — NO API)
@@ -186,4 +186,4 @@ def plot_full_signal_context(run_id, symbol=None):
 
     plt.grid(True)
     plt.tight_layout()
-    plt.show()
+    # plt.show()
