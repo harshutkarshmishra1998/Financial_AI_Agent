@@ -1,0 +1,151 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 900px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#1f77b4", "font": {"color": "#000000"}, "id": "RELIANCE.NS", "label": "RELIANCE.NS", "shape": "dot", "size": 20, "title": "Type: company"}, {"color": "#7f7f7f", "font": {"color": "#000000"}, "id": "Crude Oil", "label": "Crude Oil", "shape": "dot", "size": 20, "title": "Type: supply"}, {"color": "#2ca02c", "font": {"color": "#000000"}, "id": "OPEC Production", "label": "OPEC Production", "shape": "dot", "size": 20, "title": "Type: global"}, {"color": "#ff7f0e", "font": {"color": "#000000"}, "id": "USD/INR", "label": "USD/INR", "shape": "dot", "size": 20, "title": "Type: macro"}, {"color": "#d62728", "font": {"color": "#000000"}, "id": "Fuel Tax", "label": "Fuel Tax", "shape": "dot", "size": 20, "title": "Type: policy"}, {"color": "#2ca02c", "font": {"color": "#000000"}, "id": "Dollar Index", "label": "Dollar Index", "shape": "dot", "size": 20, "title": "Type: global"}, {"color": "#ff7f0e", "font": {"color": "#000000"}, "id": "FII Flow", "label": "FII Flow", "shape": "dot", "size": 20, "title": "Type: macro"}, {"color": "#ff7f0e", "font": {"color": "#000000"}, "id": "DII Flow", "label": "DII Flow", "shape": "dot", "size": 20, "title": "Type: macro"}, {"color": "#ff7f0e", "font": {"color": "#000000"}, "id": "System Liquidity", "label": "System Liquidity", "shape": "dot", "size": 20, "title": "Type: macro"}, {"color": "#ff7f0e", "font": {"color": "#000000"}, "id": "RBI Repo Rate", "label": "RBI Repo Rate", "shape": "dot", "size": 20, "title": "Type: macro"}, {"color": "#ff7f0e", "font": {"color": "#000000"}, "id": "US Fed Rate", "label": "US Fed Rate", "shape": "dot", "size": 20, "title": "Type: macro"}, {"color": "#ff7f0e", "font": {"color": "#000000"}, "id": "Brent Crude", "label": "Brent Crude", "shape": "dot", "size": 20, "title": "Type: macro"}, {"color": "#ff7f0e", "font": {"color": "#000000"}, "id": "ONGC.NS", "label": "ONGC.NS", "shape": "dot", "size": 20, "title": "Type: macro"}, {"color": "#ff7f0e", "font": {"color": "#000000"}, "id": "MRPL.NS", "label": "MRPL.NS", "shape": "dot", "size": 20, "title": "Type: macro"}, {"color": "#ff7f0e", "font": {"color": "#000000"}, "id": "BPCL.NS", "label": "BPCL.NS", "shape": "dot", "size": 20, "title": "Type: macro"}, {"color": "#ff7f0e", "font": {"color": "#000000"}, "id": "HINDPETRO.NS", "label": "HINDPETRO.NS", "shape": "dot", "size": 20, "title": "Type: macro"}, {"color": "#ff7f0e", "font": {"color": "#000000"}, "id": "IOC.NS", "label": "IOC.NS", "shape": "dot", "size": 20, "title": "Type: macro"}, {"color": "#ff7f0e", "font": {"color": "#000000"}, "id": "GAIL.NS", "label": "GAIL.NS", "shape": "dot", "size": 20, "title": "Type: macro"}, {"color": "#ff7f0e", "font": {"color": "#000000"}, "id": "CHENNPETRO.NS", "label": "CHENNPETRO.NS", "shape": "dot", "size": 20, "title": "Type: macro"}, {"color": "#ff7f0e", "font": {"color": "#000000"}, "id": "CASTROLIND.NS", "label": "CASTROLIND.NS", "shape": "dot", "size": 20, "title": "Type: macro"}, {"color": "#ff7f0e", "font": {"color": "#000000"}, "id": "IGL.NS", "label": "IGL.NS", "shape": "dot", "size": 20, "title": "Type: macro"}, {"color": "#ff7f0e", "font": {"color": "#000000"}, "id": "PETRONET.NS", "label": "PETRONET.NS", "shape": "dot", "size": 20, "title": "Type: macro"}, {"color": "#ff7f0e", "font": {"color": "#000000"}, "id": "GSPL.NS", "label": "GSPL.NS", "shape": "dot", "size": 20, "title": "Type: macro"}, {"color": "#ff7f0e", "font": {"color": "#000000"}, "id": "OIL.NS", "label": "OIL.NS", "shape": "dot", "size": 20, "title": "Type: macro"}, {"color": "#ff7f0e", "font": {"color": "#000000"}, "id": "COALINDIA.NS", "label": "COALINDIA.NS", "shape": "dot", "size": 20, "title": "Type: macro"}, {"color": "#ff7f0e", "font": {"color": "#000000"}, "id": "GUJGASLTD.NS", "label": "GUJGASLTD.NS", "shape": "dot", "size": 20, "title": "Type: macro"}, {"color": "#7f7f7f", "font": {"color": "#000000"}, "id": "CrudePrice", "label": "CrudePrice", "shape": "dot", "size": 20, "title": "Type: supply"}, {"color": "#7f7f7f", "font": {"color": "#000000"}, "id": "RefineryCapacity", "label": "RefineryCapacity", "shape": "dot", "size": 20, "title": "Type: supply"}, {"color": "#bcbd22", "font": {"color": "#000000"}, "id": "FuelDemand", "label": "FuelDemand", "shape": "dot", "size": 20, "title": "Type: demand"}, {"color": "#bcbd22", "font": {"color": "#000000"}, "id": "EnergyConsumption", "label": "EnergyConsumption", "shape": "dot", "size": 20, "title": "Type: demand"}, {"color": "#bcbd22", "font": {"color": "#000000"}, "id": "GlobalDemand", "label": "GlobalDemand", "shape": "dot", "size": 20, "title": "Type: demand"}, {"color": "#7f7f7f", "font": {"color": "#000000"}, "id": "OPECProduction", "label": "OPECProduction", "shape": "dot", "size": 20, "title": "Type: supply"}, {"color": "#7f7f7f", "font": {"color": "#000000"}, "id": "InventoryLevels", "label": "InventoryLevels", "shape": "dot", "size": 20, "title": "Type: supply"}, {"color": "#7f7f7f", "font": {"color": "#000000"}, "id": "Investment", "label": "Investment", "shape": "dot", "size": 20, "title": "Type: supply"}, {"color": "#7f7f7f", "font": {"color": "#000000"}, "id": "CrudePrices", "label": "CrudePrices", "shape": "dot", "size": 20, "title": "Type: supply"}, {"color": "#bcbd22", "font": {"color": "#000000"}, "id": "OilPrice", "label": "OilPrice", "shape": "dot", "size": 20, "title": "Type: demand"}, {"color": "#bcbd22", "font": {"color": "#000000"}, "id": "GDP", "label": "GDP", "shape": "dot", "size": 20, "title": "Type: demand"}, {"color": "#bcbd22", "font": {"color": "#000000"}, "id": "FuelTax", "label": "FuelTax", "shape": "dot", "size": 20, "title": "Type: demand"}, {"color": "#7f7f7f", "font": {"color": "#000000"}, "id": "RefineryOutput", "label": "RefineryOutput", "shape": "dot", "size": 20, "title": "Type: supply"}, {"color": "#bcbd22", "font": {"color": "#000000"}, "id": "FuelPrice", "label": "FuelPrice", "shape": "dot", "size": 20, "title": "Type: demand"}, {"color": "#7f7f7f", "font": {"color": "#000000"}, "id": "OilProduction", "label": "OilProduction", "shape": "dot", "size": 20, "title": "Type: supply"}, {"color": "#bcbd22", "font": {"color": "#000000"}, "id": "GlobalGDP", "label": "GlobalGDP", "shape": "dot", "size": 20, "title": "Type: demand"}, {"color": "#7f7f7f", "font": {"color": "#000000"}, "id": "ProductionCost", "label": "ProductionCost", "shape": "dot", "size": 20, "title": "Type: supply"}, {"color": "#7f7f7f", "font": {"color": "#000000"}, "id": "OilPrices", "label": "OilPrices", "shape": "dot", "size": 20, "title": "Type: supply"}, {"color": "#7f7f7f", "font": {"color": "#000000"}, "id": "Inventory", "label": "Inventory", "shape": "dot", "size": 20, "title": "Type: supply"}, {"color": "#7f7f7f", "font": {"color": "#000000"}, "id": "ProductionCosts", "label": "ProductionCosts", "shape": "dot", "size": 20, "title": "Type: supply"}, {"color": "#7f7f7f", "font": {"color": "#000000"}, "id": "StorageCapacity", "label": "StorageCapacity", "shape": "dot", "size": 20, "title": "Type: supply"}, {"color": "#bcbd22", "font": {"color": "#000000"}, "id": "EnergyPrices", "label": "EnergyPrices", "shape": "dot", "size": 20, "title": "Type: demand"}, {"color": "#7f7f7f", "font": {"color": "#000000"}, "id": "DrillingCost", "label": "DrillingCost", "shape": "dot", "size": 20, "title": "Type: supply"}, {"color": "#7f7f7f", "font": {"color": "#000000"}, "id": "USInventory", "label": "USInventory", "shape": "dot", "size": 20, "title": "Type: supply"}, {"color": "#bcbd22", "font": {"color": "#000000"}, "id": "Exports", "label": "Exports", "shape": "dot", "size": 20, "title": "Type: demand"}, {"color": "#7f7f7f", "font": {"color": "#000000"}, "id": "Production", "label": "Production", "shape": "dot", "size": 20, "title": "Type: supply"}, {"color": "#7f7f7f", "font": {"color": "#000000"}, "id": "Imports", "label": "Imports", "shape": "dot", "size": 20, "title": "Type: supply"}, {"color": "#7f7f7f", "font": {"color": "#000000"}, "id": "RefiningCapacity", "label": "RefiningCapacity", "shape": "dot", "size": 20, "title": "Type: supply"}, {"color": "#bcbd22", "font": {"color": "#000000"}, "id": "ConsumerSpending", "label": "ConsumerSpending", "shape": "dot", "size": 20, "title": "Type: demand"}, {"color": "#7f7f7f", "font": {"color": "#000000"}, "id": "CrudeOilPrice", "label": "CrudeOilPrice", "shape": "dot", "size": 20, "title": "Type: supply"}, {"color": "#bcbd22", "font": {"color": "#000000"}, "id": "TransportationCost", "label": "TransportationCost", "shape": "dot", "size": 20, "title": "Type: demand"}, {"color": "#7f7f7f", "font": {"color": "#000000"}, "id": "LaborCosts", "label": "LaborCosts", "shape": "dot", "size": 20, "title": "Type: supply"}, {"color": "#9467bd", "font": {"color": "#000000"}, "id": "National Oilwell Varco", "label": "National Oilwell Varco", "shape": "dot", "size": 20, "title": "Type: supplier"}]);
+                  edges = new vis.DataSet([{"arrows": "to", "color": "#2ca02c", "from": "RELIANCE.NS", "title": "influenced_by", "to": "Crude Oil"}, {"arrows": "to", "color": "#2ca02c", "from": "RELIANCE.NS", "title": "influenced_by", "to": "OPEC Production"}, {"arrows": "to", "color": "#2ca02c", "from": "RELIANCE.NS", "title": "influenced_by", "to": "USD/INR"}, {"arrows": "to", "color": "#d62728", "from": "RELIANCE.NS", "title": "regulated_by", "to": "Fuel Tax"}, {"arrows": "to", "color": "#aaaaaa", "from": "RELIANCE.NS", "title": "competes_with", "to": "ONGC.NS"}, {"arrows": "to", "color": "#aaaaaa", "from": "RELIANCE.NS", "title": "competes_with", "to": "MRPL.NS"}, {"arrows": "to", "color": "#aaaaaa", "from": "RELIANCE.NS", "title": "competes_with", "to": "BPCL.NS"}, {"arrows": "to", "color": "#aaaaaa", "from": "RELIANCE.NS", "title": "competes_with", "to": "HINDPETRO.NS"}, {"arrows": "to", "color": "#aaaaaa", "from": "RELIANCE.NS", "title": "competes_with", "to": "IOC.NS"}, {"arrows": "to", "color": "#aaaaaa", "from": "RELIANCE.NS", "title": "competes_with", "to": "GAIL.NS"}, {"arrows": "to", "color": "#aaaaaa", "from": "RELIANCE.NS", "title": "competes_with", "to": "CHENNPETRO.NS"}, {"arrows": "to", "color": "#aaaaaa", "from": "RELIANCE.NS", "title": "competes_with", "to": "CASTROLIND.NS"}, {"arrows": "to", "color": "#aaaaaa", "from": "RELIANCE.NS", "title": "competes_with", "to": "IGL.NS"}, {"arrows": "to", "color": "#aaaaaa", "from": "RELIANCE.NS", "title": "competes_with", "to": "PETRONET.NS"}, {"arrows": "to", "color": "#aaaaaa", "from": "RELIANCE.NS", "title": "competes_with", "to": "GSPL.NS"}, {"arrows": "to", "color": "#aaaaaa", "from": "RELIANCE.NS", "title": "competes_with", "to": "OIL.NS"}, {"arrows": "to", "color": "#aaaaaa", "from": "RELIANCE.NS", "title": "competes_with", "to": "COALINDIA.NS"}, {"arrows": "to", "color": "#aaaaaa", "from": "RELIANCE.NS", "title": "competes_with", "to": "GUJGASLTD.NS"}, {"arrows": "to", "color": "#1f77b4", "from": "RELIANCE.NS", "title": "supply", "to": "CrudePrice"}, {"arrows": "to", "color": "#1f77b4", "from": "RELIANCE.NS", "title": "supply", "to": "RefineryCapacity"}, {"arrows": "to", "color": "#ff7f0e", "from": "RELIANCE.NS", "title": "demand", "to": "FuelDemand"}, {"arrows": "to", "color": "#ff7f0e", "from": "RELIANCE.NS", "title": "demand", "to": "EnergyConsumption"}, {"arrows": "to", "color": "#2ca02c", "from": "OPEC Production", "title": "transmits_to", "to": "Dollar Index"}, {"arrows": "to", "color": "#2ca02c", "from": "USD/INR", "title": "transmits_to", "to": "FII Flow"}, {"arrows": "to", "color": "#2ca02c", "from": "USD/INR", "title": "transmits_to", "to": "DII Flow"}, {"arrows": "to", "color": "#2ca02c", "from": "RBI Repo Rate", "title": "impacts", "to": "System Liquidity"}, {"arrows": "to", "color": "#2ca02c", "from": "US Fed Rate", "title": "impacts", "to": "Dollar Index"}, {"arrows": "to", "color": "#2ca02c", "from": "Brent Crude", "title": "impacts", "to": "USD/INR"}, {"arrows": "to", "color": "#aaaaaa", "from": "ONGC.NS", "title": "competes_with", "to": "RELIANCE.NS"}, {"arrows": "to", "color": "#aaaaaa", "from": "MRPL.NS", "title": "competes_with", "to": "RELIANCE.NS"}, {"arrows": "to", "color": "#aaaaaa", "from": "BPCL.NS", "title": "competes_with", "to": "RELIANCE.NS"}, {"arrows": "to", "color": "#aaaaaa", "from": "HINDPETRO.NS", "title": "competes_with", "to": "RELIANCE.NS"}, {"arrows": "to", "color": "#aaaaaa", "from": "IOC.NS", "title": "competes_with", "to": "RELIANCE.NS"}, {"arrows": "to", "color": "#aaaaaa", "from": "GAIL.NS", "title": "competes_with", "to": "RELIANCE.NS"}, {"arrows": "to", "color": "#aaaaaa", "from": "CHENNPETRO.NS", "title": "competes_with", "to": "RELIANCE.NS"}, {"arrows": "to", "color": "#aaaaaa", "from": "CASTROLIND.NS", "title": "competes_with", "to": "RELIANCE.NS"}, {"arrows": "to", "color": "#aaaaaa", "from": "IGL.NS", "title": "competes_with", "to": "RELIANCE.NS"}, {"arrows": "to", "color": "#aaaaaa", "from": "PETRONET.NS", "title": "competes_with", "to": "RELIANCE.NS"}, {"arrows": "to", "color": "#aaaaaa", "from": "GSPL.NS", "title": "competes_with", "to": "RELIANCE.NS"}, {"arrows": "to", "color": "#aaaaaa", "from": "OIL.NS", "title": "competes_with", "to": "RELIANCE.NS"}, {"arrows": "to", "color": "#aaaaaa", "from": "COALINDIA.NS", "title": "competes_with", "to": "RELIANCE.NS"}, {"arrows": "to", "color": "#aaaaaa", "from": "GUJGASLTD.NS", "title": "competes_with", "to": "RELIANCE.NS"}, {"arrows": "to", "color": "#ff7f0e", "from": "CrudePrice", "title": "demand", "to": "GlobalDemand"}, {"arrows": "to", "color": "#1f77b4", "from": "CrudePrice", "title": "supply", "to": "OPECProduction"}, {"arrows": "to", "color": "#1f77b4", "from": "CrudePrice", "title": "supply", "to": "InventoryLevels"}, {"arrows": "to", "color": "#1f77b4", "from": "RefineryCapacity", "title": "supply", "to": "Investment"}, {"arrows": "to", "color": "#1f77b4", "from": "RefineryCapacity", "title": "supply", "to": "CrudePrices"}, {"arrows": "to", "color": "#ff7f0e", "from": "FuelDemand", "title": "demand", "to": "OilPrice"}, {"arrows": "to", "color": "#ff7f0e", "from": "FuelDemand", "title": "demand", "to": "GDP"}, {"arrows": "to", "color": "#ff7f0e", "from": "FuelDemand", "title": "demand", "to": "FuelTax"}, {"arrows": "to", "color": "#1f77b4", "from": "FuelDemand", "title": "supply", "to": "RefineryOutput"}, {"arrows": "to", "color": "#ff7f0e", "from": "EnergyConsumption", "title": "demand", "to": "FuelPrice"}, {"arrows": "to", "color": "#1f77b4", "from": "EnergyConsumption", "title": "supply", "to": "OilProduction"}, {"arrows": "to", "color": "#ff7f0e", "from": "GlobalDemand", "title": "demand", "to": "GlobalGDP"}, {"arrows": "to", "color": "#1f77b4", "from": "GlobalDemand", "title": "supply", "to": "ProductionCost"}, {"arrows": "to", "color": "#1f77b4", "from": "OPECProduction", "title": "supply", "to": "OilPrices"}, {"arrows": "to", "color": "#1f77b4", "from": "OPECProduction", "title": "supply", "to": "Inventory"}, {"arrows": "to", "color": "#1f77b4", "from": "InventoryLevels", "title": "supply", "to": "ProductionCosts"}, {"arrows": "to", "color": "#1f77b4", "from": "InventoryLevels", "title": "supply", "to": "StorageCapacity"}, {"arrows": "to", "color": "#ff7f0e", "from": "InventoryLevels", "title": "demand", "to": "EnergyPrices"}, {"arrows": "to", "color": "#1f77b4", "from": "Investment", "title": "supply", "to": "DrillingCost"}, {"arrows": "to", "color": "#1f77b4", "from": "OilPrice", "title": "supply", "to": "USInventory"}, {"arrows": "to", "color": "#ff7f0e", "from": "GDP", "title": "demand", "to": "Exports"}, {"arrows": "to", "color": "#1f77b4", "from": "GDP", "title": "supply", "to": "Production"}, {"arrows": "to", "color": "#1f77b4", "from": "GDP", "title": "supply", "to": "Imports"}, {"arrows": "to", "color": "#1f77b4", "from": "FuelTax", "title": "supply", "to": "RefiningCapacity"}, {"arrows": "to", "color": "#ff7f0e", "from": "FuelTax", "title": "demand", "to": "ConsumerSpending"}, {"arrows": "to", "color": "#1f77b4", "from": "RefineryOutput", "title": "supply", "to": "CrudeOilPrice"}, {"arrows": "to", "color": "#ff7f0e", "from": "FuelPrice", "title": "demand", "to": "TransportationCost"}, {"arrows": "to", "color": "#1f77b4", "from": "OilProduction", "title": "supply", "to": "LaborCosts"}, {"arrows": "to", "color": "#9467bd", "from": "National Oilwell Varco", "title": "supplies_to", "to": "RELIANCE.NS"}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {"interaction": {"hover": true, "navigationButtons": true, "keyboard": true}};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    
+    <div style="
+        position: fixed;
+        bottom: 20px;
+        left: 20px;
+        background: white;
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font-family: Arial;
+        font-size: 13px;
+        box-shadow: 0px 0px 8px rgba(0,0,0,0.2);
+        z-index: 9999;
+    ">
+    <b>Relation Types</b><br><br>
+
+    <span style="color:#1f77b4;">■</span> Supply<br>
+    <span style="color:#ff7f0e;">■</span> Demand<br>
+    <span style="color:#2ca02c;">■</span> Influence / Impact / Transmission<br>
+    <span style="color:#d62728;">■</span> Regulation<br>
+    <span style="color:#aaaaaa;">■</span> Competition<br>
+    <span style="color:#9467bd;">■</span> Supplier Link<br>
+    <span style="color:#444444;">■</span> Other<br>
+    </div>
+    </body>
+</html>

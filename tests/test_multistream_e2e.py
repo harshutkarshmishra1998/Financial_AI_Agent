@@ -9,7 +9,7 @@ if str(ROOT) not in sys.path:
 
 import networkx as nx
 import pandas as pd
-import pytest
+# import pytest
 
 from multistream_researcher.controller import Phase3Researcher
 from multistream_researcher.storage import MultiStreamArtifactBuilder
@@ -83,7 +83,7 @@ def test_multistream_pipeline_from_signal_graph_outputs():
     run_dir = Path("data") / run_id if run_id else _find_latest_run_dir(Path("data"))
 
     if run_dir is None or not run_dir.exists():
-        pytest.skip("No data/run_* found. Run tests/test_signal_graph.py first or set RUN_ID.")
+        raise AssertionError("No data/run_* found. Run tests/test_signal_graph.py first or set RUN_ID.")
 
     outcome = run_multistream_from_run_dir(run_dir)
 

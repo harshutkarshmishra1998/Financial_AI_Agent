@@ -39,8 +39,8 @@ def clear_directory(folder_path: str | Path):
 
 
 TICKER = "RELIANCE.NS"
-START_DATE = "2019-01-01"
-END_DATE = "2024-01-01"
+START_DATE = "2019-01-16"
+END_DATE = "2019-02-19"
 UNIVERSE_PATH = "universe/market_universe.parquet"
 DATA_ROOT = Path("data")
 
