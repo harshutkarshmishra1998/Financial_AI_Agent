@@ -399,6 +399,7 @@ dependencies = [
     { name = "fredapi" },
     { name = "groq" },
     { name = "matplotlib" },
+    { name = "mpld3" },
     { name = "networkx" },
     { name = "openpyxl" },
     { name = "pandas" },
@@ -420,6 +421,7 @@ requires-dist = [
     { name = "fredapi", specifier = ">=0.5.2" },
     { name = "groq", specifier = ">=1.0.0" },
     { name = "matplotlib", specifier = ">=3.10.8" },
+    { name = "mpld3", specifier = ">=0.5.12" },
     { name = "networkx", specifier = ">=3.6.1" },
     { name = "openpyxl", specifier = ">=3.1.5" },
     { name = "pandas", specifier = ">=3.0.1" },
@@ -881,6 +883,19 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/c7/74/97e72a36efd4ae2bccb3463284300f8953f199b5ffbc04cbbb0ec78f74b1/matplotlib_inline-0.2.1.tar.gz", hash = "sha256:e1ee949c340d771fc39e241ea75683deb94762c8fa5f2927ec57c83c4dffa9fe", size = 8110, upload-time = "2025-10-23T09:00:22.126Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/af/33/ee4519fa02ed11a94aef9559552f3b17bb863f2ecfe1a35dc7f548cde231/matplotlib_inline-0.2.1-py3-none-any.whl", hash = "sha256:d56ce5156ba6085e00a9d54fead6ed29a9c47e215cd1bba2e976ef39f5710a76", size = 9516, upload-time = "2025-10-23T09:00:20.675Z" },
+]
+
+[[package]]
+name = "mpld3"
+version = "0.5.12"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "jinja2" },
+    { name = "matplotlib" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/f8/b2/9943f3e0bdf4ff9968b7ac4499152162d8ee8fc8eaa55487339872f86300/mpld3-0.5.12.tar.gz", hash = "sha256:1333e2bca012ea9af3c27801ba36f65bc26540b6fad4c56a903afb19477f2c37", size = 1028433, upload-time = "2025-11-05T18:12:24.183Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/5b/69/93b34728cc386efdde0c342f8c680b9187dea7beb7adaf6b58a0713be101/mpld3-0.5.12-py3-none-any.whl", hash = "sha256:bea31799a4041029a906f53f2662bbf1c49903e0c0bc712b412354158ec7cf54", size = 203051, upload-time = "2025-11-05T18:12:22.527Z" },
 ]
 
 [[package]]

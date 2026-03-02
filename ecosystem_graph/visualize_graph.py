@@ -134,7 +134,7 @@ def draw_ecosystem_graph(
     """)
 
     # net.show(output_file)
-    net.write_html(output_file, open_browser=True, notebook=False)
+    net.write_html(output_file, open_browser=False, notebook=False)
 
     # inject legend into html
     with open(output_file, "r", encoding="utf-8") as f:
