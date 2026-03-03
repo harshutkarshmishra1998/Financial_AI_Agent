@@ -6,16 +6,21 @@ from multistream_researcher.chunking.domain_chunker import chunk_text
 from multistream_researcher.embeddings.embedder import Embedder
 from multistream_researcher.vector_store.faiss_store import FAISSStore
 from multistream_researcher.compression.context_compressor import compress
+from multistream_researcher.llm_driver_ranker import LLMDriverRanker
 
 class Phase3Researcher:
 
     def __init__(self):
         self.embedder = Embedder()
         self.store = None
+        self.driver_ranker = LLMDriverRanker()
 
     def ingest(self, anomaly_event, graph_nodes):
+        selected_nodes = self.driver_ranker.rank(anomaly_event, graph_nodes)
+        if not selected_nodes:
+            selected_nodes = graph_nodes[:6]
 
-        queries = build_queries(anomaly_event, graph_nodes)
+        queries = build_queries(anomaly_event, selected_nodes)
 
         docs = []
         for q in queries[:10]:
@@ -26,7 +31,7 @@ class Phase3Researcher:
                 "content": (
                     f"No web documents were fetched for {anomaly_event.get('symbol', 'unknown symbol')} "
                     f"around {anomaly_event.get('timestamp', 'unknown date')}. "
-                    f"Tracked graph nodes: {', '.join(graph_nodes)}."
+                    f"Tracked graph nodes: {', '.join(selected_nodes)}."
                 ),
                 "url": None,
             }]
@@ -42,7 +47,7 @@ class Phase3Researcher:
                 texts.append(c)
                 meta.append({
                     "url": d.get("url"),
-                    "matched_nodes": [n for n in graph_nodes if n.lower() in c.lower()],
+                    "matched_nodes": [n for n in selected_nodes if n.lower() in c.lower()],
                     "credibility": 0.7
                 })
         
