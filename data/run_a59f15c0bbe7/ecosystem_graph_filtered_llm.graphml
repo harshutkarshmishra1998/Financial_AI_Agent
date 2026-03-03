@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"><graph edgedefault="directed"><node id="RELIANCE.NS"/>
+<node id="Crude Oil"/>
+<node id="OPEC Production"/>
+<node id="USD/INR"/>
+<node id="Fuel Tax"/>
+<node id="Dollar Index"/>
+<edge source="RELIANCE.NS" target="Crude Oil"/>
+<edge source="RELIANCE.NS" target="OPEC Production"/>
+<edge source="RELIANCE.NS" target="USD/INR"/>
+<edge source="RELIANCE.NS" target="Fuel Tax"/>
+<edge source="OPEC Production" target="Dollar Index"/>
+</graph></graphml>
