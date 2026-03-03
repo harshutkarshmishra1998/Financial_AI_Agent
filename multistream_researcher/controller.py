@@ -1,24 +1,29 @@
 
+from collections import Counter
+
 from multistream_researcher.query_builder import build_queries
 from multistream_researcher.news_connectors.web_connector import search_and_load
 from multistream_researcher.cleaners.financial_text_cleaner import clean_text
 from multistream_researcher.chunking.domain_chunker import chunk_text
-from multistream_researcher.embeddings.embedder import Embedder
-from multistream_researcher.vector_store.faiss_store import FAISSStore
-from multistream_researcher.compression.context_compressor import compress
 from multistream_researcher.llm_driver_ranker import LLMDriverRanker
 
 class Phase3Researcher:
 
     def __init__(self):
-        self.embedder = Embedder()
-        self.store = None
+        self.texts = []
+        self.meta = []
         self.driver_ranker = LLMDriverRanker()
 
     def ingest(self, anomaly_event, graph_nodes):
+        original_nodes = len(graph_nodes)
         selected_nodes = self.driver_ranker.rank(anomaly_event, graph_nodes)
         if not selected_nodes:
             selected_nodes = graph_nodes[:6]
+
+        print(
+            f"[Phase3] Node filter summary → original: {original_nodes}, "
+            f"selected for retrieval: {len(selected_nodes)}"
+        )
 
         queries = build_queries(anomaly_event, selected_nodes)
 
@@ -54,17 +59,22 @@ class Phase3Researcher:
         if not texts:
             raise RuntimeError("No usable text generated during ingestion.")
 
-        embeddings = self.embedder.encode(texts)
+        self.texts = texts
+        self.meta = meta
+        return selected_nodes
 
-        self.store = FAISSStore(len(embeddings[0]))
-        self.store.add(embeddings, texts, meta)
-        print("Index dimension:", embeddings.shape)
+    def _score_text(self, text, query_tokens):
+        token_counts = Counter(text.lower().split())
+        return sum(token_counts[tok] for tok in query_tokens)
 
     def retrieve(self, query):
-        if self.store is None:
-            raise RuntimeError("Index not initialized. Call ingest() before retrieve().")
-        qemb = self.embedder.encode([query])
-        # print("Query dimension:", qemb.shape)
-        results = self.store.search(qemb, 5)
-        texts = [r[0] for r in results]
-        return compress(texts)
+        if not self.texts:
+            raise RuntimeError("Retriever not initialized. Call ingest() before retrieve().")
+
+        query_tokens = [t.strip().lower() for t in query.split() if t.strip()]
+        ranked = sorted(
+            self.texts,
+            key=lambda text: self._score_text(text, query_tokens),
+            reverse=True,
+        )
+        return ranked[:5]

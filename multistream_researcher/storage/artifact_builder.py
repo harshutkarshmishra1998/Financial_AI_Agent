@@ -6,10 +6,8 @@ from pathlib import Path
 import re
 from typing import Iterable
 
-import faiss
 import pandas as pd
 
-from multistream_researcher.embeddings.embedder import Embedder
 from multistream_researcher.macro_connectors.world_bank import fetch_world_bank
 from multistream_researcher.news_connectors.web_connector import search_and_load
 
@@ -68,7 +66,6 @@ class MultiStreamArtifactBuilder:
     def __init__(self, data_dir: str | Path = "data"):
         self.data_dir = Path(data_dir)
         self.data_dir.mkdir(parents=True, exist_ok=True)
-        self.embedder = Embedder()
 
     def _build_news_df(self, anomaly_event: dict, graph_nodes: list[str]) -> pd.DataFrame:
         rows = []
@@ -165,15 +162,6 @@ class MultiStreamArtifactBuilder:
             )
         return pd.DataFrame(rows)
 
-    def _build_faiss(self, df: pd.DataFrame, text_col: str, stem: str) -> Path:
-        texts = [str(x) for x in df[text_col].fillna("").tolist()]
-        vectors = self.embedder.encode(texts)
-        index = faiss.IndexFlatIP(vectors.shape[1])
-        index.add(vectors)
-        out_path = self.data_dir / f"{stem}.faiss"
-        faiss.write_index(index, str(out_path))
-        return out_path
-
     def build(self, anomaly_event: dict, graph_nodes: list[str]) -> dict:
         news_df = self._build_news_df(anomaly_event, graph_nodes)
         macro_df = self._build_macro_df(graph_nodes)
@@ -187,17 +175,10 @@ class MultiStreamArtifactBuilder:
         _safe_write_parquet(macro_df, macro_path)
         _safe_write_parquet(stock_df, stock_path)
 
-        news_faiss = self._build_faiss(news_df, "content", "news")
-        macro_faiss = self._build_faiss(macro_df, "content", "macro")
-        stock_faiss = self._build_faiss(stock_df, "content", "stock")
-
         manifest = {
             "news_parquet": str(news_path),
             "macro_parquet": str(macro_path),
             "stock_parquet": str(stock_path),
-            "news_faiss": str(news_faiss),
-            "macro_faiss": str(macro_faiss),
-            "stock_faiss": str(stock_faiss),
             "rows": {
                 "news": len(news_df),
                 "macro": len(macro_df),
