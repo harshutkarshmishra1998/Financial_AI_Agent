@@ -1,6 +1,7 @@
 import concurrent.futures
 from pathlib import Path
 import shutil
+import time
 import pandas as pd
 import networkx as nx
 
@@ -12,12 +13,9 @@ from ecosystem_graph.visualize_graph import draw_ecosystem_graph
 from ecosystem_graph.save_graph import save_graph_structure
 
 from multistream_researcher.controller import Phase3Researcher
+from multistream_researcher.llm_driver_ranker import LLMDriverRanker
 from multistream_researcher.storage import MultiStreamArtifactBuilder
 
-
-# ==============================
-# CONFIG
-# ==============================
 
 TICKER = "RELIANCE.NS"
 START_DATE = "2019-01-16"
@@ -25,10 +23,6 @@ END_DATE = "2019-02-19"
 UNIVERSE_PATH = "universe/market_universe.parquet"
 DATA_ROOT = Path("data")
 
-
-# ==============================
-# PIPELINE
-# ==============================
 
 def clear_directory(folder_path: str | Path):
     folder = Path(folder_path)
@@ -45,9 +39,17 @@ def clear_directory(folder_path: str | Path):
 
     print(f"Cleared everything inside → {folder}")
 
-def run_full_pipeline():
 
-    # clear_directory("data")
+def _timed_step(label: str, fn):
+    start = time.perf_counter()
+    print(f"\n[START] {label}")
+    value = fn()
+    elapsed = time.perf_counter() - start
+    print(f"[DONE]  {label} ({elapsed:.2f}s)")
+    return value, elapsed
+
+
+def run_full_pipeline():
 
     DATA_ROOT.mkdir(exist_ok=True)
 
@@ -57,42 +59,43 @@ def run_full_pipeline():
 
     print(f"Run ID → {run_id}")
 
-    # ------------------------------------------------
-    # PHASE 1 + PHASE 2 (parallel)
-    # ------------------------------------------------
     with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
 
+        signal_start = time.perf_counter()
         f_signal = executor.submit(
             run_signal_engine,
             symbol=TICKER,
             start=START_DATE,
             end=END_DATE,
-            run_id=run_id
+            run_id=run_id,
         )
 
-        f_graph = executor.submit(
-            lambda: EcosystemPipeline(UNIVERSE_PATH).run(TICKER)
-        )
+        graph_start = time.perf_counter()
+        f_graph = executor.submit(lambda: EcosystemPipeline(UNIVERSE_PATH).run(TICKER))
 
-        events = f_signal.result()
+        _events = f_signal.result()
+        signal_elapsed = time.perf_counter() - signal_start
+        print(f"[DONE]  Signal engine ({signal_elapsed:.2f}s)")
+
         nodes, edges = f_graph.result()
+        graph_elapsed = time.perf_counter() - graph_start
+        print(f"[DONE]  Ecosystem graph generation ({graph_elapsed:.2f}s)")
 
-    # ------------------------------------------------
-    # SAVE GRAPH
-    # ------------------------------------------------
-    draw_ecosystem_graph(
-        nodes,
-        edges,
-        output_file=str(run_dir / "ecosystem_graph.html")
+    _, draw_sec = _timed_step(
+        "Draw and save ecosystem graph HTML",
+        lambda: draw_ecosystem_graph(nodes, edges, output_file=str(run_dir / "ecosystem_graph.html")),
     )
 
-    save_graph_structure(nodes, edges, run_dir)
+    _, struct_sec = _timed_step(
+        "Save graph structure files",
+        lambda: save_graph_structure(nodes, edges, run_dir),
+    )
 
-    # ------------------------------------------------
-    # LOAD ANOMALY FROM SIGNAL OUTPUT
-    # ------------------------------------------------
     anomalies_path = run_dir / "signal" / "anomalies.jsonl"
-    df = pd.read_json(anomalies_path, lines=True)
+    df, anomaly_sec = _timed_step(
+        "Load anomalies",
+        lambda: pd.read_json(anomalies_path, lines=True),
+    )
 
     if df.empty:
         raise RuntimeError("No anomaly events detected")
@@ -104,49 +107,70 @@ def run_full_pipeline():
         "symbol": str(last["symbol"]),
     }
 
-    # ------------------------------------------------
-    # LOAD GRAPH STRUCTURE
-    # ------------------------------------------------
-    graph = nx.read_graphml(run_dir / "ecosystem_graph.graphml")
-    # graph_nodes = [str(n) for n in graph.nodes()]
-    graph_nodes = list(graph.nodes())[:8]
+    graph, graph_load_sec = _timed_step(
+        "Load graph structure",
+        lambda: nx.read_graphml(run_dir / "ecosystem_graph.graphml"),
+    )
+    graph_nodes = [str(node) for node in graph.nodes()]
 
-    # ------------------------------------------------
-    # PHASE 3 — MULTISTREAM RESEARCH
-    # ------------------------------------------------
+    ranker = LLMDriverRanker()
+    selected_nodes, rank_sec = _timed_step(
+        "LLM node filtering",
+        lambda: ranker.rank(anomaly, graph_nodes),
+    )
+    if not selected_nodes:
+        selected_nodes = graph_nodes[:8]
+
+    print(
+        "[INFO] Node counts before multistream researcher → "
+        f"original: {len(graph_nodes)}, after LLM filter: {len(selected_nodes)}"
+    )
+
     multistream_dir = run_dir / "multistream"
 
     builder = MultiStreamArtifactBuilder(data_dir=multistream_dir)
-    manifest = builder.build(anomaly, graph_nodes)
+    manifest, build_sec = _timed_step(
+        "Build multistream parquet artifacts",
+        lambda: builder.build(anomaly, selected_nodes),
+    )
 
     researcher = Phase3Researcher()
-    researcher.ingest(anomaly, graph_nodes)
+    _, ingest_sec = _timed_step(
+        "Ingest cleaned/chunked data",
+        lambda: researcher.ingest(anomaly, selected_nodes),
+    )
 
-    # results = researcher.retrieve(
-    #     f"drivers behind move in {anomaly['symbol']}"
-    # )
+    results, retrieve_sec = _timed_step(
+        "Retrieve top context chunks",
+        lambda: researcher.retrieve(f"drivers behind move in {anomaly['symbol']}"),
+    )
 
-    # if not results:
-    #     raise RuntimeError("Phase3 produced no retrieval results")
-
-    # print("Retrieved context chunks:", len(results))
+    if not results:
+        raise RuntimeError("Phase3 produced no retrieval results")
 
     return {
         "run_id": run_id,
         "run_dir": str(run_dir),
         "graph_nodes": len(graph_nodes),
-        # "retrieved_chunks": len(results),
-        "manifest": manifest
+        "selected_nodes": len(selected_nodes),
+        "retrieved_chunks": len(results),
+        "timings_sec": {
+            "signal": round(signal_elapsed, 3),
+            "graph_generation": round(graph_elapsed, 3),
+            "draw_graph": round(draw_sec, 3),
+            "save_graph_files": round(struct_sec, 3),
+            "load_anomalies": round(anomaly_sec, 3),
+            "load_graph": round(graph_load_sec, 3),
+            "llm_filter": round(rank_sec, 3),
+            "build_artifacts": round(build_sec, 3),
+            "ingest": round(ingest_sec, 3),
+            "retrieve": round(retrieve_sec, 3),
+        },
+        "manifest": manifest,
     }
 
-
-# ==============================
-# ENTRYPOINT
-# ==============================
 
 if __name__ == "__main__":
     out = run_full_pipeline()
     print("\nPIPELINE COMPLETE")
-    # for k, v in out.items():
-    #     print(k, "→", v)
     print(out)
