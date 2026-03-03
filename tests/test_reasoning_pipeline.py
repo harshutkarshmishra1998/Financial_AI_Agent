@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from unittest.mock import patch
 
 from reasoning.data_loader import load_run_context
 from reasoning.pipeline import _build_prompt, generate_anomaly_reasoning
@@ -19,7 +20,11 @@ def test_build_prompt_from_real_run_data_is_bounded() -> None:
 
 def test_generate_anomaly_reasoning_from_existing_run_dir() -> None:
     run_dir = Path("data/run_1462fceff3c4")
-    result = generate_anomaly_reasoning(run_dir)
+    with patch(
+        "reasoning.pipeline.generate_reasoning_text",
+        return_value="mocked response",
+    ) as mocked:
+        result = generate_anomaly_reasoning(run_dir)
 
     assert isinstance(result, str)
     assert len(result.strip()) > 0
