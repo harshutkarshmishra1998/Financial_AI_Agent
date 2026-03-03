@@ -1,6 +1,7 @@
 import json
 import os
-
+import api_keys
+from openai import OpenAI
 
 class LLMDriverRanker:
     """
@@ -11,18 +12,8 @@ class LLMDriverRanker:
     def __init__(self, model: str = "gpt-4o-mini"):
         self.model = model
         self.client = None
+        self.client = OpenAI()
 
-        api_key = os.getenv("OPENAI_API_KEY")
-        if not api_key:
-            return
-
-        try:
-            from openai import OpenAI
-
-            self.client = OpenAI(api_key=api_key)
-        except Exception:
-            # Fail open and let deterministic fallback handle ranking.
-            self.client = None
 
     def rank(self, anomaly, graph_nodes, top_k: int = 6):
         if not graph_nodes:
