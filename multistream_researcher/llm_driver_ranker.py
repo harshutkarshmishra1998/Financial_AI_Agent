@@ -15,7 +15,7 @@ class LLMDriverRanker:
         self.client = OpenAI()
 
 
-    def rank(self, anomaly, graph_nodes, top_k: int = 6):
+    def rank(self, anomaly, graph_nodes, top_k: int = 15):
         if not graph_nodes:
             return []
 
