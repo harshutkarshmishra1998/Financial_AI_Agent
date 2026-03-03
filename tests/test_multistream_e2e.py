@@ -100,11 +100,17 @@ def run_multistream_from_run_dir(run_dir: Path) -> dict:
         "[INFO] Node counts before multistream researcher → "
         f"original: {len(graph_nodes)}, after LLM filter: {len(selected_nodes)}"
     )
+    print("[INFO] Original nodes:")
+    print(graph_nodes)
+    print("[INFO] LLM-filtered nodes:")
+    print(selected_nodes)
 
     (filtered_graphml, filtered_pkl), save_filtered_sec = _timed_step(
         "Save LLM-filtered graph artifacts",
         lambda: _save_filtered_graph_artifacts(run_dir, selected_nodes, graph_edges),
     )
+    print(f"[INFO] Saved filtered GraphML: {filtered_graphml}")
+    print(f"[INFO] Saved filtered PKL: {filtered_pkl}")
 
     out_dir = run_dir / "multistream"
     builder = MultiStreamArtifactBuilder(data_dir=out_dir)

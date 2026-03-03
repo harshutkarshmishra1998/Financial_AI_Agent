@@ -2,6 +2,7 @@ import concurrent.futures
 from pathlib import Path
 import shutil
 import time
+import pickle
 import pandas as pd
 import networkx as nx
 
@@ -47,6 +48,30 @@ def _timed_step(label: str, fn):
     elapsed = time.perf_counter() - start
     print(f"[DONE]  {label} ({elapsed:.2f}s)")
     return value, elapsed
+
+
+
+
+def _save_filtered_graph_artifacts(
+    run_dir: Path,
+    selected_nodes: list[str],
+    graph_edges: list[tuple[str, str]],
+) -> tuple[Path, Path]:
+    selected = set(selected_nodes)
+    filtered_edges = [(u, v) for u, v in graph_edges if u in selected and v in selected]
+
+    filtered_graph = nx.DiGraph()
+    filtered_graph.add_nodes_from(selected_nodes)
+    filtered_graph.add_edges_from(filtered_edges)
+
+    graphml_path = run_dir / "ecosystem_graph_filtered_llm.graphml"
+    pkl_path = run_dir / "ecosystem_graph_filtered_llm.pkl"
+
+    nx.write_graphml(filtered_graph, graphml_path)
+    with pkl_path.open("wb") as f:
+        pickle.dump(filtered_graph, f)
+
+    return graphml_path, pkl_path
 
 
 def run_full_pipeline():
@@ -125,6 +150,18 @@ def run_full_pipeline():
         "[INFO] Node counts before multistream researcher → "
         f"original: {len(graph_nodes)}, after LLM filter: {len(selected_nodes)}"
     )
+    print("[INFO] Original nodes:")
+    print(graph_nodes)
+    print("[INFO] LLM-filtered nodes:")
+    print(selected_nodes)
+
+    (filtered_graph_paths, save_filtered_sec) = _timed_step(
+        "Save LLM-filtered graph artifacts",
+        lambda: _save_filtered_graph_artifacts(run_dir, selected_nodes, list(graph.edges())),
+    )
+    filtered_graphml, filtered_pkl = filtered_graph_paths
+    print(f"[INFO] Saved filtered GraphML: {filtered_graphml}")
+    print(f"[INFO] Saved filtered PKL: {filtered_pkl}")
 
     multistream_dir = run_dir / "multistream"
 
@@ -154,6 +191,8 @@ def run_full_pipeline():
         "graph_nodes": len(graph_nodes),
         "selected_nodes": len(selected_nodes),
         "retrieved_chunks": len(results),
+        "filtered_graphml": str(filtered_graphml),
+        "filtered_pkl": str(filtered_pkl),
         "timings_sec": {
             "signal": round(signal_elapsed, 3),
             "graph_generation": round(graph_elapsed, 3),
@@ -162,6 +201,7 @@ def run_full_pipeline():
             "load_anomalies": round(anomaly_sec, 3),
             "load_graph": round(graph_load_sec, 3),
             "llm_filter": round(rank_sec, 3),
+            "save_filtered_graph": round(save_filtered_sec, 3),
             "build_artifacts": round(build_sec, 3),
             "ingest": round(ingest_sec, 3),
             "retrieve": round(retrieve_sec, 3),
