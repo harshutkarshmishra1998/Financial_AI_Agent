@@ -54,7 +54,7 @@ def _read_table(path: Path) -> pd.DataFrame:
 def _safe_head(df: pd.DataFrame, max_rows: int = 8) -> list[dict[str, Any]]:
     if df.empty:
         return []
-    return df.head(max_rows).to_dict(orient="records")
+    return df.head(max_rows).to_dict(orient="records") #type: ignore
 
 
 def load_run_context(run_directory: str | Path) -> dict[str, Any]:
