@@ -48,17 +48,12 @@ def to_dataframe(data):
     else:
         df = pd.DataFrame({"value": [data]})
 
-    # Make dataframe serialization compatible with older Streamlit Arrow parsers.
     for col in df.columns:
         series = df[col]
 
-        # Convert python datetime objects
         if series.apply(lambda x: isinstance(x, datetime.datetime)).any():
             df[col] = pd.to_datetime(series, errors="coerce")
 
-        # Force any string/object column to Python-native string objects.
-        # This avoids Arrow "LargeUtf8" payloads that older Streamlit frontends
-        # cannot decode.
         elif is_string_dtype(series) or is_object_dtype(series):
             df[col] = series.map(lambda x: None if pd.isna(x) else str(x)).astype("object")
 
@@ -75,10 +70,7 @@ if run_btn:
 
     st.success(f"Run ID: {RUN_ID}")
 
-    # --------------------------------------------------
-    # STEP 1 SIGNAL PIPELINE
-    # --------------------------------------------------
-
+    # SIGNAL PIPELINE
     with signal_container:
 
         st.header("Signal Detection")
@@ -98,10 +90,8 @@ if run_btn:
             st.write("Detected anomalies")
             st.dataframe(to_dataframe(events), use_container_width=True)
 
-    # --------------------------------------------------
-    # STEP 2 SHOW GENERATED PLOTS
-    # --------------------------------------------------
 
+    # SHOW GENERATED PLOTS
     with plot_container:
 
         st.header("Signal Analytics")
@@ -113,10 +103,7 @@ if run_btn:
             for plot in plots_path.glob("*.png"):
                 st.image(str(plot), caption=plot.name)
 
-    # --------------------------------------------------
-    # STEP 3 ECOSYSTEM GRAPH
-    # --------------------------------------------------
-
+    # ECOSYSTEM GRAPH
     with graph_container:
 
         st.header("Ecosystem Graph")
@@ -141,10 +128,7 @@ if run_btn:
                 height=900
             )
 
-    # --------------------------------------------------
-    # STEP 4 MULTISTREAM DATA
-    # --------------------------------------------------
-
+    # MULTISTREAM DATA
     with research_container:
 
         st.header("Multistream Data")
@@ -165,10 +149,7 @@ if run_btn:
 
                 st.dataframe(to_dataframe(df.head(100)), use_container_width=True)
 
-    # --------------------------------------------------
-    # STEP 5 REASONING
-    # --------------------------------------------------
-
+    # REASONING
     with reasoning_container:
 
         st.header("AI Reasoning")

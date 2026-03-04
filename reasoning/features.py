@@ -12,10 +12,10 @@ def extract_graph_features(graph: nx.DiGraph, symbol: str):
         "degree_centrality": nx.degree_centrality(graph).get(symbol, 0),
         "pagerank": nx.pagerank(graph).get(symbol, 0),
         "out_edges": [
-            {"to": t, **d} for _, t, d in out_edges
+            {"to": t, **d} for _, t, d in out_edges #type: ignore
         ],
         "in_edges": [
-            {"from": s, **d} for s, _, d in in_edges
+            {"from": s, **d} for s, _, d in in_edges #type: ignore
         ],
     }
 
@@ -64,7 +64,7 @@ def summarize_news(df):
 
     for col in df.columns:
         if df[col].dtype.kind in "fi":
-            summary[col] = {
+            summary[col] = { #type: ignore
                 "mean": float(df[col].mean())
             }
 

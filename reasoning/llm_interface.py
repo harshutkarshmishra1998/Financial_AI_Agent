@@ -14,4 +14,4 @@ def generate_reasoning_text(prompt: str) -> str:
         # max_tokens=1200,
     )
 
-    return response.choices[0].message.content
+    return response.choices[0].message.content #type: ignore

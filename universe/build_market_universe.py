@@ -1,130 +1,18 @@
-# import pandas as pd
-# import yfinance as yf
-# from tqdm import tqdm
-
-
-# # ============================================
-# # PATHS
-# # ============================================
-
-# EQUITY_MASTER = "universe/EQUITY_L.csv"
-# CLASSIFICATION = "universe/ind_nifty500list.csv"
-# OUTPUT = "universe/market_universe.parquet"
-
-
-# # ============================================
-# # LOAD DATA
-# # ============================================
-
-# equity = pd.read_csv(EQUITY_MASTER)
-# equity = equity.rename(columns={
-#     "SYMBOL": "symbol",
-#     "NAME OF COMPANY": "company_name",
-#     " ISIN NUMBER": "isin"
-# })
-
-# equity["yfinance_symbol"] = equity["symbol"] + ".NS"
-
-
-# industry = pd.read_csv(CLASSIFICATION)
-# industry = industry.rename(columns={
-#     "Symbol": "symbol",
-#     "Industry": "nse_industry",
-#     "Industry Group": "nse_industry_group",
-#     "Sub-Industry": "nse_subgroup",
-#     "Basic Industry": "nse_basic_industry"
-# })
-
-
-# df = equity.merge(industry, on="symbol", how="left")
-
-
-# # ============================================
-# # YFINANCE VALIDATION
-# # ============================================
-
-# def fetch_yf_metadata(ticker):
-
-#     try:
-#         tk = yf.Ticker(ticker)
-
-#         hist = tk.history(period="5d")
-
-#         if hist.empty:
-#             return None
-
-#         info = tk.fast_info
-
-#         return {
-#             "is_yfinance_tradable": True,
-#             "first_trade_date": tk.get_history_metadata().get("firstTradeDate"),
-#             "currency": info.get("currency"),
-#             "market_cap": info.get("marketCap"),
-#             "avg_daily_volume": info.get("tenDayAverageVolume"),
-#             "exchange_timezone": info.get("timezone")
-#         }
-
-#     except:
-#         return None
-
-
-# # ============================================
-# # ENRICH
-# # ============================================
-
-# records = []
-
-# for _, row in tqdm(df.iterrows(), total=len(df)):
-
-#     meta = fetch_yf_metadata(row["yfinance_symbol"])
-
-#     if meta:
-#         row = row.to_dict()
-#         row.update(meta)
-#         records.append(row)
-
-
-# final_df = pd.DataFrame(records)
-
-
-# # ============================================
-# # FLAGS
-# # ============================================
-
-# final_df["instrument_type"] = "equity"
-# final_df["is_active"] = True
-
-
-# # ============================================
-# # SAVE
-# # ============================================
-
-# final_df.to_parquet(OUTPUT, index=False)
-
-# print("Saved universe:", len(final_df))
-
 import pandas as pd
 import yfinance as yf
 from tqdm import tqdm
 from datetime import datetime
 import json
 
-# =========================================================
 # CONFIGURATION
-# =========================================================
 
 EQUITY_MASTER = "universe/EQUITY_L.csv"
 CLASSIFICATION = "universe/ind_nifty500list.csv"
 OUTPUT = "universe/market_universe2.parquet"
-
-# TEST MODE — set to None for full universe
 TEST_SAMPLE_SIZE = None   # change to None for full build
 
 
-# =========================================================
 # LOAD NSE EQUITY MASTER
-# =========================================================
-
 def load_equity_master():
     df = pd.read_csv(EQUITY_MASTER)
 
@@ -139,29 +27,7 @@ def load_equity_master():
     return df[["symbol", "company_name", "isin", "yfinance_symbol"]]
 
 
-# =========================================================
 # LOAD NSE CLASSIFICATION
-# =========================================================
-
-# def load_classification():
-#     df = pd.read_csv(CLASSIFICATION)
-
-#     df = df.rename(columns={
-#         "Symbol": "symbol",
-#         "Industry": "nse_industry",
-#         "Industry Group": "nse_industry_group",
-#         "Sub-Industry": "nse_subgroup",
-#         "Basic Industry": "nse_basic_industry"
-#     })
-
-#     return df[[
-#         "symbol",
-#         "nse_industry",
-#         "nse_industry_group",
-#         "nse_subgroup",
-#         "nse_basic_industry"
-#     ]]
-
 def load_classification():
 
     df = pd.read_csv(CLASSIFICATION)
@@ -207,10 +73,7 @@ def load_classification():
     return df[required]
 
 
-# =========================================================
 # ECONOMIC EXPOSURE TAGS
-# =========================================================
-
 def generate_exposure_tags(basic_industry):
 
     if pd.isna(basic_industry):
@@ -251,10 +114,7 @@ def generate_exposure_tags(basic_industry):
     return tags
 
 
-# =========================================================
 # NEWS SEARCH TERMS
-# =========================================================
-
 def generate_news_aliases(company, symbol):
     aliases = {
         company,
@@ -265,10 +125,7 @@ def generate_news_aliases(company, symbol):
     return list(aliases)
 
 
-# =========================================================
 # YFINANCE VALIDATION + METADATA
-# =========================================================
-
 def fetch_yf_metadata(ticker):
 
     try:
@@ -298,10 +155,7 @@ def fetch_yf_metadata(ticker):
         return None
 
 
-# =========================================================
 # BUILD UNIVERSE
-# =========================================================
-
 def build_universe():
 
     print("Loading equity master...")
@@ -363,9 +217,6 @@ def build_universe():
     print("Saved to:", OUTPUT)
 
 
-# =========================================================
 # RUN
-# =========================================================
-
 if __name__ == "__main__":
     build_universe()
