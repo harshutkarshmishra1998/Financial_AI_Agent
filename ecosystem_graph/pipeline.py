@@ -1,4 +1,5 @@
 # ecosystem_graph/pipeline.py
+from pathlib import Path
 import pandas as pd
 from ecosystem_graph.data.market_universe import MarketUniverse
 from ecosystem_graph.data.ontology import INDUSTRY_DEPENDENCY_PROFILE
@@ -7,12 +8,18 @@ from ecosystem_graph.core.propagation import PropagationEngine
 from ecosystem_graph.groq_client import GroqLLM
 from ecosystem_graph.expansion.supply_demand_expander import SupplyDemandExpander
 from ecosystem_graph.expansion.company_dependency_expander import CompanyDependencyExpander
-
+from ecosystem_graph.visualize_graph import draw_ecosystem_graph
+from ecosystem_graph.save_graph import save_graph_structure
 
 class EcosystemPipeline:
 
-    def __init__(self, universe_path):
+    def __init__(self, universe_path, run_id=None):
         self.universe = MarketUniverse(universe_path)
+        self.run_id = run_id or "default_run"
+
+        graph_dir = Path("data") / self.run_id / "graph_outputs"
+        graph_dir.mkdir(parents=True, exist_ok=True)
+        self.graph_dir = graph_dir
 
     def _inject_sector_competitors(self, engine, symbol, industry):
         """
@@ -99,5 +106,10 @@ class EcosystemPipeline:
         )
 
         nodes, edges = engine.export()
+
+        print("Saving graph output → ", self.graph_dir)
+
+        draw_ecosystem_graph(nodes, edges, self.graph_dir)
+        save_graph_structure(nodes, edges, self.graph_dir)
 
         return nodes, edges

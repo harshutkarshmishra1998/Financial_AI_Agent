@@ -4,8 +4,9 @@ from pyvis.network import Network
 def draw_ecosystem_graph(
     nodes,
     edges,
-    output_file="data/ecosystem_interactive.html"
+    graph_dir,
 ):
+    output_file = graph_dir / "ecosystem_graph.html"
     """
     Interactive Financial Ecosystem Graph
     - hover edge to see relation
@@ -134,7 +135,7 @@ def draw_ecosystem_graph(
     """)
 
     # net.show(output_file)
-    net.write_html(output_file, open_browser=False, notebook=False)
+    net.write_html(str(output_file), open_browser=False, notebook=False)
 
     # inject legend into html
     with open(output_file, "r", encoding="utf-8") as f:
@@ -145,4 +146,4 @@ def draw_ecosystem_graph(
     with open(output_file, "w", encoding="utf-8") as f:
         f.write(html)
 
-    print(f"Interactive graph saved → {output_file}")
+    # print(f"Interactive graph saved → {output_file}")

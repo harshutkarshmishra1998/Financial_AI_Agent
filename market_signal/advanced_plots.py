@@ -117,9 +117,9 @@ def signal_vs_volatility(run_id):
 
 def plot_full_signal_context(run_id, symbol=None):
 
-    print("\n==============================")
-    print("FULL SIGNAL CONTEXT PLOT")
-    print("==============================")
+    # print("\n==============================")
+    # print("FULL SIGNAL CONTEXT PLOT")
+    # print("==============================")
 
     # -----------------------------
     # load timeline (contains price + features)

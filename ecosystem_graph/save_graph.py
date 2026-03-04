@@ -21,4 +21,4 @@ def save_graph_structure(nodes, edges, run_dir):
     # 2. Save as GraphML (Great for visualization)
     nx.write_graphml(G, run_dir / "ecosystem_graph.graphml")
 
-    print(f"Graph structure saved to {run_dir}")
+    # print(f"Graph structure saved to {run_dir}")
