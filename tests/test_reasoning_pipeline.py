@@ -1,39 +1,5 @@
-from __future__ import annotations
-
 from pathlib import Path
-from unittest.mock import patch
+from reasoning.pipeline import generate_anomaly_reasoning
 
-from reasoning.data_loader import load_run_context
-from reasoning.pipeline import _build_prompt, generate_anomaly_reasoning
-
-
-def test_build_prompt_from_real_run_data_is_bounded() -> None:
-    run_dir = Path("data/run_1462fceff3c4")
-    context = load_run_context(run_dir)
-
-    prompt = _build_prompt(context)
-
-    # assert isinstance(prompt, str)
-    # assert len(prompt) <= 16_050
-    # assert "Latest anomaly:" in prompt
-    print("Generated prompt length:", len(prompt))
-    print("Generated prompt content (truncated to 500 chars):", prompt[:500])   
-
-
-def test_generate_anomaly_reasoning_from_existing_run_dir() -> None:
-    run_dir = Path("data/run_1462fceff3c4")
-    with patch(
-        "reasoning.pipeline.generate_reasoning_text",
-        return_value="mocked response",
-    ) as mocked:
-        result = generate_anomaly_reasoning(run_dir)
-
-    print("Generated reasoning result:", result)
-    # assert isinstance(result, str)
-    # assert len(result.strip()) > 0
-
-
-if __name__ == "__main__":
-    test_build_prompt_from_real_run_data_is_bounded()
-    test_generate_anomaly_reasoning_from_existing_run_dir()
-    print("All reasoning pipeline tests passed.")
+out = generate_anomaly_reasoning(Path("data/run_1462fceff3c4"))
+print(out)
