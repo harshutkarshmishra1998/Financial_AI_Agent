@@ -2,6 +2,11 @@ import streamlit as st
 import streamlit.components.v1 as components
 import pandas as pd
 from pathlib import Path
+from pandas.api.types import (
+    is_datetime64_any_dtype,
+    is_object_dtype,
+    is_string_dtype,
+)
 
 from foundation import RunManager
 from market_signal.pipeline import run_signal_pipeline
@@ -43,16 +48,22 @@ def to_dataframe(data):
     else:
         df = pd.DataFrame({"value": [data]})
 
-    # Make dataframe Arrow compatible
+    # Make dataframe serialization compatible with older Streamlit Arrow parsers.
     for col in df.columns:
+        series = df[col]
 
         # Convert python datetime objects
-        if df[col].apply(lambda x: isinstance(x, datetime.datetime)).any():
-            df[col] = pd.to_datetime(df[col], errors="coerce")
+        if series.apply(lambda x: isinstance(x, datetime.datetime)).any():
+            df[col] = pd.to_datetime(series, errors="coerce")
 
-        # Convert mixed objects to string
-        elif df[col].dtype == "object":
-            df[col] = df[col].astype(str)
+        # Force any string/object column to Python-native string objects.
+        # This avoids Arrow "LargeUtf8" payloads that older Streamlit frontends
+        # cannot decode.
+        elif is_string_dtype(series) or is_object_dtype(series):
+            df[col] = series.map(lambda x: None if pd.isna(x) else str(x)).astype("object")
+
+        elif is_datetime64_any_dtype(series):
+            df[col] = pd.to_datetime(series, errors="coerce")
 
     return df
 
@@ -152,7 +163,7 @@ if run_btn:
 
                 df = pd.read_parquet(f)
 
-                st.dataframe(df.head(100))
+                st.dataframe(to_dataframe(df.head(100)), use_container_width=True)
 
     # --------------------------------------------------
     # STEP 5 REASONING
