@@ -1,0 +1,333 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"><key id="d1" for="edge" attr.name="relation" attr.type="string"/>
+<key id="d0" for="node" attr.name="type" attr.type="string"/>
+<graph edgedefault="directed"><node id="TCS.NS">
+  <data key="d0">company</data>
+</node>
+<node id="US Tech Spending">
+  <data key="d0">global</data>
+</node>
+<node id="USD/INR">
+  <data key="d0">macro</data>
+</node>
+<node id="FII Flow">
+  <data key="d0">macro</data>
+</node>
+<node id="DII Flow">
+  <data key="d0">macro</data>
+</node>
+<node id="System Liquidity">
+  <data key="d0">macro</data>
+</node>
+<node id="RBI Repo Rate"/>
+<node id="Dollar Index">
+  <data key="d0">global</data>
+</node>
+<node id="US Fed Rate"/>
+<node id="Brent Crude"/>
+<node id="INFY.NS"/>
+<node id="WIPRO.NS"/>
+<node id="OFSS.NS"/>
+<node id="ZENSARTECH.NS"/>
+<node id="BSOFT.NS"/>
+<node id="TATAELXSI.NS"/>
+<node id="SONATSOFTW.NS"/>
+<node id="MPHASIS.NS"/>
+<node id="HCLTECH.NS"/>
+<node id="COFORGE.NS"/>
+<node id="CYIENT.NS"/>
+<node id="TECHM.NS"/>
+<node id="PERSISTENT.NS"/>
+<node id="INTELLECT.NS"/>
+<node id="Labor">
+  <data key="d0">supply</data>
+</node>
+<node id="Investment">
+  <data key="d0">supply</data>
+</node>
+<node id="GDP">
+  <data key="d0">demand</data>
+</node>
+<node id="Inflation">
+  <data key="d0">demand</data>
+</node>
+<node id="Wages">
+  <data key="d0">supply</data>
+</node>
+<node id="Skills">
+  <data key="d0">supply</data>
+</node>
+<node id="Productivity">
+  <data key="d0">demand</data>
+</node>
+<node id="InterestRate">
+  <data key="d0">supply</data>
+</node>
+<node id="TaxIncentives">
+  <data key="d0">supply</data>
+</node>
+<node id="CloudDemand">
+  <data key="d0">demand</data>
+</node>
+<node id="CybersecuritySpending">
+  <data key="d0">demand</data>
+</node>
+<node id="Exports">
+  <data key="d0">demand</data>
+</node>
+<node id="Innovation">
+  <data key="d0">supply</data>
+</node>
+<node id="Efficiency">
+  <data key="d0">supply</data>
+</node>
+<node id="Government Spending">
+  <data key="d0">demand</data>
+</node>
+<node id="Consumer Spending">
+  <data key="d0">demand</data>
+</node>
+<node id="Savings">
+  <data key="d0">supply</data>
+</node>
+<node id="LaborCost">
+  <data key="d0">supply</data>
+</node>
+<node id="SoftwareDemand">
+  <data key="d0">demand</data>
+</node>
+<node id="ITSpending">
+  <data key="d0">demand</data>
+</node>
+<node id="ITInvestment">
+  <data key="d0">demand</data>
+</node>
+<node id="ServerCost">
+  <data key="d0">supply</data>
+</node>
+<node id="DataTraffic">
+  <data key="d0">demand</data>
+</node>
+<node id="BandwidthPrice">
+  <data key="d0">supply</data>
+</node>
+<node id="GovRegulation">
+  <data key="d0">supply</data>
+</node>
+<node id="TechTalent">
+  <data key="d0">supply</data>
+</node>
+<node id="DataBreachCost">
+  <data key="d0">demand</data>
+</node>
+<node id="GovernmentSubsidy">
+  <data key="d0">supply</data>
+</node>
+<node id="GlobalDemand">
+  <data key="d0">demand</data>
+</node>
+<node id="R&amp;D">
+  <data key="d0">supply</data>
+</node>
+<node id="Adoption">
+  <data key="d0">demand</data>
+</node>
+<edge source="TCS.NS" target="US Tech Spending">
+  <data key="d1">influenced_by</data>
+</edge>
+<edge source="TCS.NS" target="USD/INR">
+  <data key="d1">influenced_by</data>
+</edge>
+<edge source="TCS.NS" target="INFY.NS">
+  <data key="d1">competes_with</data>
+</edge>
+<edge source="TCS.NS" target="WIPRO.NS">
+  <data key="d1">competes_with</data>
+</edge>
+<edge source="TCS.NS" target="OFSS.NS">
+  <data key="d1">competes_with</data>
+</edge>
+<edge source="TCS.NS" target="ZENSARTECH.NS">
+  <data key="d1">competes_with</data>
+</edge>
+<edge source="TCS.NS" target="BSOFT.NS">
+  <data key="d1">competes_with</data>
+</edge>
+<edge source="TCS.NS" target="TATAELXSI.NS">
+  <data key="d1">competes_with</data>
+</edge>
+<edge source="TCS.NS" target="SONATSOFTW.NS">
+  <data key="d1">competes_with</data>
+</edge>
+<edge source="TCS.NS" target="MPHASIS.NS">
+  <data key="d1">competes_with</data>
+</edge>
+<edge source="TCS.NS" target="HCLTECH.NS">
+  <data key="d1">competes_with</data>
+</edge>
+<edge source="TCS.NS" target="COFORGE.NS">
+  <data key="d1">competes_with</data>
+</edge>
+<edge source="TCS.NS" target="CYIENT.NS">
+  <data key="d1">competes_with</data>
+</edge>
+<edge source="TCS.NS" target="TECHM.NS">
+  <data key="d1">competes_with</data>
+</edge>
+<edge source="TCS.NS" target="PERSISTENT.NS">
+  <data key="d1">competes_with</data>
+</edge>
+<edge source="TCS.NS" target="INTELLECT.NS">
+  <data key="d1">competes_with</data>
+</edge>
+<edge source="TCS.NS" target="Labor">
+  <data key="d1">supply</data>
+</edge>
+<edge source="TCS.NS" target="Investment">
+  <data key="d1">supply</data>
+</edge>
+<edge source="TCS.NS" target="GDP">
+  <data key="d1">demand</data>
+</edge>
+<edge source="TCS.NS" target="Inflation">
+  <data key="d1">demand</data>
+</edge>
+<edge source="USD/INR" target="FII Flow">
+  <data key="d1">transmits_to</data>
+</edge>
+<edge source="USD/INR" target="DII Flow">
+  <data key="d1">transmits_to</data>
+</edge>
+<edge source="RBI Repo Rate" target="System Liquidity">
+  <data key="d1">impacts</data>
+</edge>
+<edge source="US Fed Rate" target="Dollar Index">
+  <data key="d1">impacts</data>
+</edge>
+<edge source="Brent Crude" target="USD/INR">
+  <data key="d1">impacts</data>
+</edge>
+<edge source="INFY.NS" target="TCS.NS">
+  <data key="d1">competes_with</data>
+</edge>
+<edge source="WIPRO.NS" target="TCS.NS">
+  <data key="d1">competes_with</data>
+</edge>
+<edge source="OFSS.NS" target="TCS.NS">
+  <data key="d1">competes_with</data>
+</edge>
+<edge source="ZENSARTECH.NS" target="TCS.NS">
+  <data key="d1">competes_with</data>
+</edge>
+<edge source="BSOFT.NS" target="TCS.NS">
+  <data key="d1">competes_with</data>
+</edge>
+<edge source="TATAELXSI.NS" target="TCS.NS">
+  <data key="d1">competes_with</data>
+</edge>
+<edge source="SONATSOFTW.NS" target="TCS.NS">
+  <data key="d1">competes_with</data>
+</edge>
+<edge source="MPHASIS.NS" target="TCS.NS">
+  <data key="d1">competes_with</data>
+</edge>
+<edge source="HCLTECH.NS" target="TCS.NS">
+  <data key="d1">competes_with</data>
+</edge>
+<edge source="COFORGE.NS" target="TCS.NS">
+  <data key="d1">competes_with</data>
+</edge>
+<edge source="CYIENT.NS" target="TCS.NS">
+  <data key="d1">competes_with</data>
+</edge>
+<edge source="TECHM.NS" target="TCS.NS">
+  <data key="d1">competes_with</data>
+</edge>
+<edge source="PERSISTENT.NS" target="TCS.NS">
+  <data key="d1">competes_with</data>
+</edge>
+<edge source="INTELLECT.NS" target="TCS.NS">
+  <data key="d1">competes_with</data>
+</edge>
+<edge source="Labor" target="Wages">
+  <data key="d1">supply</data>
+</edge>
+<edge source="Labor" target="Skills">
+  <data key="d1">supply</data>
+</edge>
+<edge source="Labor" target="Productivity">
+  <data key="d1">demand</data>
+</edge>
+<edge source="Investment" target="InterestRate">
+  <data key="d1">supply</data>
+</edge>
+<edge source="Investment" target="TaxIncentives">
+  <data key="d1">supply</data>
+</edge>
+<edge source="Investment" target="CloudDemand">
+  <data key="d1">demand</data>
+</edge>
+<edge source="Investment" target="CybersecuritySpending">
+  <data key="d1">demand</data>
+</edge>
+<edge source="GDP" target="Exports">
+  <data key="d1">demand</data>
+</edge>
+<edge source="GDP" target="Innovation">
+  <data key="d1">supply</data>
+</edge>
+<edge source="Inflation" target="Efficiency">
+  <data key="d1">supply</data>
+</edge>
+<edge source="Productivity" target="Government Spending">
+  <data key="d1">demand</data>
+</edge>
+<edge source="Productivity" target="Consumer Spending">
+  <data key="d1">demand</data>
+</edge>
+<edge source="InterestRate" target="Savings">
+  <data key="d1">supply</data>
+</edge>
+<edge source="TaxIncentives" target="LaborCost">
+  <data key="d1">supply</data>
+</edge>
+<edge source="TaxIncentives" target="SoftwareDemand">
+  <data key="d1">demand</data>
+</edge>
+<edge source="TaxIncentives" target="ITSpending">
+  <data key="d1">demand</data>
+</edge>
+<edge source="CloudDemand" target="ITInvestment">
+  <data key="d1">demand</data>
+</edge>
+<edge source="CloudDemand" target="ServerCost">
+  <data key="d1">supply</data>
+</edge>
+<edge source="CloudDemand" target="DataTraffic">
+  <data key="d1">demand</data>
+</edge>
+<edge source="CloudDemand" target="BandwidthPrice">
+  <data key="d1">supply</data>
+</edge>
+<edge source="CybersecuritySpending" target="GovRegulation">
+  <data key="d1">supply</data>
+</edge>
+<edge source="CybersecuritySpending" target="TechTalent">
+  <data key="d1">supply</data>
+</edge>
+<edge source="CybersecuritySpending" target="DataBreachCost">
+  <data key="d1">demand</data>
+</edge>
+<edge source="Exports" target="GovernmentSubsidy">
+  <data key="d1">supply</data>
+</edge>
+<edge source="Exports" target="GlobalDemand">
+  <data key="d1">demand</data>
+</edge>
+<edge source="Innovation" target="R&amp;D">
+  <data key="d1">supply</data>
+</edge>
+<edge source="Efficiency" target="Adoption">
+  <data key="d1">demand</data>
+</edge>
+</graph></graphml>

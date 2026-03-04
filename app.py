@@ -20,9 +20,51 @@ st.set_page_config(layout="wide")
 
 st.title("Financial AI Agent")
 
-symbol = st.sidebar.text_input("Symbol", "RELIANCE.NS")
-start = st.sidebar.text_input("Start Date", "2019-01-01")
-end = st.sidebar.text_input("End Date", "2024-01-01")
+# symbol = st.sidebar.text_input("Symbol", "RELIANCE.NS")
+# start = st.sidebar.text_input("Start Date", "2019-01-01")
+# end = st.sidebar.text_input("End Date", "2024-01-01")
+
+import datetime
+
+universe_path = Path("universe/market_universe.parquet")
+
+if universe_path.exists():
+
+    universe_df = pd.read_parquet(universe_path)
+
+    # dropdown label: SYMBOL — COMPANY
+    universe_df["label"] = universe_df["symbol"] + " — " + universe_df["company_name"]
+
+    label_to_symbol = dict(zip(universe_df["label"], universe_df["yfinance_symbol"]))
+
+    selected_label = st.sidebar.selectbox(
+        "Select Company",
+        universe_df["label"].sort_values()
+    )
+
+    symbol = label_to_symbol[selected_label]
+
+else:
+    st.sidebar.error("market_universe.parquet not found")
+    symbol = "RELIANCE.NS"
+
+
+# -----------------------------
+# DATE PICKERS
+# -----------------------------
+
+start_date = st.sidebar.date_input(
+    "Start Date",
+    datetime.date(2019, 1, 1)
+)
+
+end_date = st.sidebar.date_input(
+    "End Date",
+    datetime.date(2024, 1, 1)
+)
+
+start = start_date.strftime("%Y-%m-%d")
+end = end_date.strftime("%Y-%m-%d")
 
 run_btn = st.sidebar.button("Run Pipeline")
 

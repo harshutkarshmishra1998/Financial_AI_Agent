@@ -1,0 +1,10 @@
+{
+  "news_parquet": "data\\run_de58fe184660\\multistream\\news.parquet",
+  "macro_parquet": "data\\run_de58fe184660\\multistream\\macro.parquet",
+  "stock_parquet": "data\\run_de58fe184660\\multistream\\stock.parquet",
+  "rows": {
+    "news": 15,
+    "macro": 5,
+    "stock": 5
+  }
+}

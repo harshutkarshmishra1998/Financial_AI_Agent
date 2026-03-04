@@ -1,0 +1,151 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 900px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#1f77b4", "font": {"color": "#000000"}, "id": "TCS.NS", "label": "TCS.NS", "shape": "dot", "size": 20, "title": "Type: company"}, {"color": "#2ca02c", "font": {"color": "#000000"}, "id": "US Tech Spending", "label": "US Tech Spending", "shape": "dot", "size": 20, "title": "Type: global"}, {"color": "#ff7f0e", "font": {"color": "#000000"}, "id": "USD/INR", "label": "USD/INR", "shape": "dot", "size": 20, "title": "Type: macro"}, {"color": "#ff7f0e", "font": {"color": "#000000"}, "id": "FII Flow", "label": "FII Flow", "shape": "dot", "size": 20, "title": "Type: macro"}, {"color": "#ff7f0e", "font": {"color": "#000000"}, "id": "DII Flow", "label": "DII Flow", "shape": "dot", "size": 20, "title": "Type: macro"}, {"color": "#ff7f0e", "font": {"color": "#000000"}, "id": "System Liquidity", "label": "System Liquidity", "shape": "dot", "size": 20, "title": "Type: macro"}, {"color": "#ff7f0e", "font": {"color": "#000000"}, "id": "RBI Repo Rate", "label": "RBI Repo Rate", "shape": "dot", "size": 20, "title": "Type: macro"}, {"color": "#2ca02c", "font": {"color": "#000000"}, "id": "Dollar Index", "label": "Dollar Index", "shape": "dot", "size": 20, "title": "Type: global"}, {"color": "#ff7f0e", "font": {"color": "#000000"}, "id": "US Fed Rate", "label": "US Fed Rate", "shape": "dot", "size": 20, "title": "Type: macro"}, {"color": "#ff7f0e", "font": {"color": "#000000"}, "id": "Brent Crude", "label": "Brent Crude", "shape": "dot", "size": 20, "title": "Type: macro"}, {"color": "#ff7f0e", "font": {"color": "#000000"}, "id": "INFY.NS", "label": "INFY.NS", "shape": "dot", "size": 20, "title": "Type: macro"}, {"color": "#ff7f0e", "font": {"color": "#000000"}, "id": "WIPRO.NS", "label": "WIPRO.NS", "shape": "dot", "size": 20, "title": "Type: macro"}, {"color": "#ff7f0e", "font": {"color": "#000000"}, "id": "OFSS.NS", "label": "OFSS.NS", "shape": "dot", "size": 20, "title": "Type: macro"}, {"color": "#ff7f0e", "font": {"color": "#000000"}, "id": "ZENSARTECH.NS", "label": "ZENSARTECH.NS", "shape": "dot", "size": 20, "title": "Type: macro"}, {"color": "#ff7f0e", "font": {"color": "#000000"}, "id": "BSOFT.NS", "label": "BSOFT.NS", "shape": "dot", "size": 20, "title": "Type: macro"}, {"color": "#ff7f0e", "font": {"color": "#000000"}, "id": "TATAELXSI.NS", "label": "TATAELXSI.NS", "shape": "dot", "size": 20, "title": "Type: macro"}, {"color": "#ff7f0e", "font": {"color": "#000000"}, "id": "SONATSOFTW.NS", "label": "SONATSOFTW.NS", "shape": "dot", "size": 20, "title": "Type: macro"}, {"color": "#ff7f0e", "font": {"color": "#000000"}, "id": "MPHASIS.NS", "label": "MPHASIS.NS", "shape": "dot", "size": 20, "title": "Type: macro"}, {"color": "#ff7f0e", "font": {"color": "#000000"}, "id": "HCLTECH.NS", "label": "HCLTECH.NS", "shape": "dot", "size": 20, "title": "Type: macro"}, {"color": "#ff7f0e", "font": {"color": "#000000"}, "id": "COFORGE.NS", "label": "COFORGE.NS", "shape": "dot", "size": 20, "title": "Type: macro"}, {"color": "#ff7f0e", "font": {"color": "#000000"}, "id": "CYIENT.NS", "label": "CYIENT.NS", "shape": "dot", "size": 20, "title": "Type: macro"}, {"color": "#ff7f0e", "font": {"color": "#000000"}, "id": "TECHM.NS", "label": "TECHM.NS", "shape": "dot", "size": 20, "title": "Type: macro"}, {"color": "#ff7f0e", "font": {"color": "#000000"}, "id": "PERSISTENT.NS", "label": "PERSISTENT.NS", "shape": "dot", "size": 20, "title": "Type: macro"}, {"color": "#ff7f0e", "font": {"color": "#000000"}, "id": "INTELLECT.NS", "label": "INTELLECT.NS", "shape": "dot", "size": 20, "title": "Type: macro"}, {"color": "#7f7f7f", "font": {"color": "#000000"}, "id": "Labor", "label": "Labor", "shape": "dot", "size": 20, "title": "Type: supply"}, {"color": "#7f7f7f", "font": {"color": "#000000"}, "id": "Investment", "label": "Investment", "shape": "dot", "size": 20, "title": "Type: supply"}, {"color": "#bcbd22", "font": {"color": "#000000"}, "id": "GDP", "label": "GDP", "shape": "dot", "size": 20, "title": "Type: demand"}, {"color": "#bcbd22", "font": {"color": "#000000"}, "id": "Inflation", "label": "Inflation", "shape": "dot", "size": 20, "title": "Type: demand"}, {"color": "#7f7f7f", "font": {"color": "#000000"}, "id": "Wages", "label": "Wages", "shape": "dot", "size": 20, "title": "Type: supply"}, {"color": "#7f7f7f", "font": {"color": "#000000"}, "id": "Skills", "label": "Skills", "shape": "dot", "size": 20, "title": "Type: supply"}, {"color": "#bcbd22", "font": {"color": "#000000"}, "id": "Productivity", "label": "Productivity", "shape": "dot", "size": 20, "title": "Type: demand"}, {"color": "#7f7f7f", "font": {"color": "#000000"}, "id": "InterestRate", "label": "InterestRate", "shape": "dot", "size": 20, "title": "Type: supply"}, {"color": "#7f7f7f", "font": {"color": "#000000"}, "id": "TaxIncentives", "label": "TaxIncentives", "shape": "dot", "size": 20, "title": "Type: supply"}, {"color": "#bcbd22", "font": {"color": "#000000"}, "id": "CloudDemand", "label": "CloudDemand", "shape": "dot", "size": 20, "title": "Type: demand"}, {"color": "#bcbd22", "font": {"color": "#000000"}, "id": "CybersecuritySpending", "label": "CybersecuritySpending", "shape": "dot", "size": 20, "title": "Type: demand"}, {"color": "#bcbd22", "font": {"color": "#000000"}, "id": "Exports", "label": "Exports", "shape": "dot", "size": 20, "title": "Type: demand"}, {"color": "#7f7f7f", "font": {"color": "#000000"}, "id": "Innovation", "label": "Innovation", "shape": "dot", "size": 20, "title": "Type: supply"}, {"color": "#7f7f7f", "font": {"color": "#000000"}, "id": "Efficiency", "label": "Efficiency", "shape": "dot", "size": 20, "title": "Type: supply"}, {"color": "#bcbd22", "font": {"color": "#000000"}, "id": "Government Spending", "label": "Government Spending", "shape": "dot", "size": 20, "title": "Type: demand"}, {"color": "#bcbd22", "font": {"color": "#000000"}, "id": "Consumer Spending", "label": "Consumer Spending", "shape": "dot", "size": 20, "title": "Type: demand"}, {"color": "#7f7f7f", "font": {"color": "#000000"}, "id": "Savings", "label": "Savings", "shape": "dot", "size": 20, "title": "Type: supply"}, {"color": "#7f7f7f", "font": {"color": "#000000"}, "id": "LaborCost", "label": "LaborCost", "shape": "dot", "size": 20, "title": "Type: supply"}, {"color": "#bcbd22", "font": {"color": "#000000"}, "id": "SoftwareDemand", "label": "SoftwareDemand", "shape": "dot", "size": 20, "title": "Type: demand"}, {"color": "#bcbd22", "font": {"color": "#000000"}, "id": "ITSpending", "label": "ITSpending", "shape": "dot", "size": 20, "title": "Type: demand"}, {"color": "#bcbd22", "font": {"color": "#000000"}, "id": "ITInvestment", "label": "ITInvestment", "shape": "dot", "size": 20, "title": "Type: demand"}, {"color": "#7f7f7f", "font": {"color": "#000000"}, "id": "ServerCost", "label": "ServerCost", "shape": "dot", "size": 20, "title": "Type: supply"}, {"color": "#bcbd22", "font": {"color": "#000000"}, "id": "DataTraffic", "label": "DataTraffic", "shape": "dot", "size": 20, "title": "Type: demand"}, {"color": "#7f7f7f", "font": {"color": "#000000"}, "id": "BandwidthPrice", "label": "BandwidthPrice", "shape": "dot", "size": 20, "title": "Type: supply"}, {"color": "#7f7f7f", "font": {"color": "#000000"}, "id": "GovRegulation", "label": "GovRegulation", "shape": "dot", "size": 20, "title": "Type: supply"}, {"color": "#7f7f7f", "font": {"color": "#000000"}, "id": "TechTalent", "label": "TechTalent", "shape": "dot", "size": 20, "title": "Type: supply"}, {"color": "#bcbd22", "font": {"color": "#000000"}, "id": "DataBreachCost", "label": "DataBreachCost", "shape": "dot", "size": 20, "title": "Type: demand"}, {"color": "#7f7f7f", "font": {"color": "#000000"}, "id": "GovernmentSubsidy", "label": "GovernmentSubsidy", "shape": "dot", "size": 20, "title": "Type: supply"}, {"color": "#bcbd22", "font": {"color": "#000000"}, "id": "GlobalDemand", "label": "GlobalDemand", "shape": "dot", "size": 20, "title": "Type: demand"}, {"color": "#7f7f7f", "font": {"color": "#000000"}, "id": "R\u0026D", "label": "R\u0026D", "shape": "dot", "size": 20, "title": "Type: supply"}, {"color": "#bcbd22", "font": {"color": "#000000"}, "id": "Adoption", "label": "Adoption", "shape": "dot", "size": 20, "title": "Type: demand"}]);
+                  edges = new vis.DataSet([{"arrows": "to", "color": "#2ca02c", "from": "TCS.NS", "title": "influenced_by", "to": "US Tech Spending"}, {"arrows": "to", "color": "#2ca02c", "from": "TCS.NS", "title": "influenced_by", "to": "USD/INR"}, {"arrows": "to", "color": "#aaaaaa", "from": "TCS.NS", "title": "competes_with", "to": "INFY.NS"}, {"arrows": "to", "color": "#aaaaaa", "from": "TCS.NS", "title": "competes_with", "to": "WIPRO.NS"}, {"arrows": "to", "color": "#aaaaaa", "from": "TCS.NS", "title": "competes_with", "to": "OFSS.NS"}, {"arrows": "to", "color": "#aaaaaa", "from": "TCS.NS", "title": "competes_with", "to": "ZENSARTECH.NS"}, {"arrows": "to", "color": "#aaaaaa", "from": "TCS.NS", "title": "competes_with", "to": "BSOFT.NS"}, {"arrows": "to", "color": "#aaaaaa", "from": "TCS.NS", "title": "competes_with", "to": "TATAELXSI.NS"}, {"arrows": "to", "color": "#aaaaaa", "from": "TCS.NS", "title": "competes_with", "to": "SONATSOFTW.NS"}, {"arrows": "to", "color": "#aaaaaa", "from": "TCS.NS", "title": "competes_with", "to": "MPHASIS.NS"}, {"arrows": "to", "color": "#aaaaaa", "from": "TCS.NS", "title": "competes_with", "to": "HCLTECH.NS"}, {"arrows": "to", "color": "#aaaaaa", "from": "TCS.NS", "title": "competes_with", "to": "COFORGE.NS"}, {"arrows": "to", "color": "#aaaaaa", "from": "TCS.NS", "title": "competes_with", "to": "CYIENT.NS"}, {"arrows": "to", "color": "#aaaaaa", "from": "TCS.NS", "title": "competes_with", "to": "TECHM.NS"}, {"arrows": "to", "color": "#aaaaaa", "from": "TCS.NS", "title": "competes_with", "to": "PERSISTENT.NS"}, {"arrows": "to", "color": "#aaaaaa", "from": "TCS.NS", "title": "competes_with", "to": "INTELLECT.NS"}, {"arrows": "to", "color": "#1f77b4", "from": "TCS.NS", "title": "supply", "to": "Labor"}, {"arrows": "to", "color": "#1f77b4", "from": "TCS.NS", "title": "supply", "to": "Investment"}, {"arrows": "to", "color": "#ff7f0e", "from": "TCS.NS", "title": "demand", "to": "GDP"}, {"arrows": "to", "color": "#ff7f0e", "from": "TCS.NS", "title": "demand", "to": "Inflation"}, {"arrows": "to", "color": "#2ca02c", "from": "USD/INR", "title": "transmits_to", "to": "FII Flow"}, {"arrows": "to", "color": "#2ca02c", "from": "USD/INR", "title": "transmits_to", "to": "DII Flow"}, {"arrows": "to", "color": "#2ca02c", "from": "RBI Repo Rate", "title": "impacts", "to": "System Liquidity"}, {"arrows": "to", "color": "#2ca02c", "from": "US Fed Rate", "title": "impacts", "to": "Dollar Index"}, {"arrows": "to", "color": "#2ca02c", "from": "Brent Crude", "title": "impacts", "to": "USD/INR"}, {"arrows": "to", "color": "#aaaaaa", "from": "INFY.NS", "title": "competes_with", "to": "TCS.NS"}, {"arrows": "to", "color": "#aaaaaa", "from": "WIPRO.NS", "title": "competes_with", "to": "TCS.NS"}, {"arrows": "to", "color": "#aaaaaa", "from": "OFSS.NS", "title": "competes_with", "to": "TCS.NS"}, {"arrows": "to", "color": "#aaaaaa", "from": "ZENSARTECH.NS", "title": "competes_with", "to": "TCS.NS"}, {"arrows": "to", "color": "#aaaaaa", "from": "BSOFT.NS", "title": "competes_with", "to": "TCS.NS"}, {"arrows": "to", "color": "#aaaaaa", "from": "TATAELXSI.NS", "title": "competes_with", "to": "TCS.NS"}, {"arrows": "to", "color": "#aaaaaa", "from": "SONATSOFTW.NS", "title": "competes_with", "to": "TCS.NS"}, {"arrows": "to", "color": "#aaaaaa", "from": "MPHASIS.NS", "title": "competes_with", "to": "TCS.NS"}, {"arrows": "to", "color": "#aaaaaa", "from": "HCLTECH.NS", "title": "competes_with", "to": "TCS.NS"}, {"arrows": "to", "color": "#aaaaaa", "from": "COFORGE.NS", "title": "competes_with", "to": "TCS.NS"}, {"arrows": "to", "color": "#aaaaaa", "from": "CYIENT.NS", "title": "competes_with", "to": "TCS.NS"}, {"arrows": "to", "color": "#aaaaaa", "from": "TECHM.NS", "title": "competes_with", "to": "TCS.NS"}, {"arrows": "to", "color": "#aaaaaa", "from": "PERSISTENT.NS", "title": "competes_with", "to": "TCS.NS"}, {"arrows": "to", "color": "#aaaaaa", "from": "INTELLECT.NS", "title": "competes_with", "to": "TCS.NS"}, {"arrows": "to", "color": "#1f77b4", "from": "Labor", "title": "supply", "to": "Wages"}, {"arrows": "to", "color": "#1f77b4", "from": "Labor", "title": "supply", "to": "Skills"}, {"arrows": "to", "color": "#ff7f0e", "from": "Labor", "title": "demand", "to": "Productivity"}, {"arrows": "to", "color": "#1f77b4", "from": "Investment", "title": "supply", "to": "InterestRate"}, {"arrows": "to", "color": "#1f77b4", "from": "Investment", "title": "supply", "to": "TaxIncentives"}, {"arrows": "to", "color": "#ff7f0e", "from": "Investment", "title": "demand", "to": "CloudDemand"}, {"arrows": "to", "color": "#ff7f0e", "from": "Investment", "title": "demand", "to": "CybersecuritySpending"}, {"arrows": "to", "color": "#ff7f0e", "from": "GDP", "title": "demand", "to": "Exports"}, {"arrows": "to", "color": "#1f77b4", "from": "GDP", "title": "supply", "to": "Innovation"}, {"arrows": "to", "color": "#1f77b4", "from": "Inflation", "title": "supply", "to": "Efficiency"}, {"arrows": "to", "color": "#ff7f0e", "from": "Productivity", "title": "demand", "to": "Government Spending"}, {"arrows": "to", "color": "#ff7f0e", "from": "Productivity", "title": "demand", "to": "Consumer Spending"}, {"arrows": "to", "color": "#1f77b4", "from": "InterestRate", "title": "supply", "to": "Savings"}, {"arrows": "to", "color": "#1f77b4", "from": "TaxIncentives", "title": "supply", "to": "LaborCost"}, {"arrows": "to", "color": "#ff7f0e", "from": "TaxIncentives", "title": "demand", "to": "SoftwareDemand"}, {"arrows": "to", "color": "#ff7f0e", "from": "TaxIncentives", "title": "demand", "to": "ITSpending"}, {"arrows": "to", "color": "#ff7f0e", "from": "CloudDemand", "title": "demand", "to": "ITInvestment"}, {"arrows": "to", "color": "#1f77b4", "from": "CloudDemand", "title": "supply", "to": "ServerCost"}, {"arrows": "to", "color": "#ff7f0e", "from": "CloudDemand", "title": "demand", "to": "DataTraffic"}, {"arrows": "to", "color": "#1f77b4", "from": "CloudDemand", "title": "supply", "to": "BandwidthPrice"}, {"arrows": "to", "color": "#1f77b4", "from": "CybersecuritySpending", "title": "supply", "to": "GovRegulation"}, {"arrows": "to", "color": "#1f77b4", "from": "CybersecuritySpending", "title": "supply", "to": "TechTalent"}, {"arrows": "to", "color": "#ff7f0e", "from": "CybersecuritySpending", "title": "demand", "to": "DataBreachCost"}, {"arrows": "to", "color": "#1f77b4", "from": "Exports", "title": "supply", "to": "GovernmentSubsidy"}, {"arrows": "to", "color": "#ff7f0e", "from": "Exports", "title": "demand", "to": "GlobalDemand"}, {"arrows": "to", "color": "#1f77b4", "from": "Innovation", "title": "supply", "to": "R\u0026D"}, {"arrows": "to", "color": "#ff7f0e", "from": "Efficiency", "title": "demand", "to": "Adoption"}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {"interaction": {"hover": true, "navigationButtons": true, "keyboard": true}};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    
+    <div style="
+        position: fixed;
+        bottom: 20px;
+        left: 20px;
+        background: white;
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font-family: Arial;
+        font-size: 13px;
+        box-shadow: 0px 0px 8px rgba(0,0,0,0.2);
+        z-index: 9999;
+    ">
+    <b>Relation Types</b><br><br>
+
+    <span style="color:#1f77b4;">■</span> Supply<br>
+    <span style="color:#ff7f0e;">■</span> Demand<br>
+    <span style="color:#2ca02c;">■</span> Influence / Impact / Transmission<br>
+    <span style="color:#d62728;">■</span> Regulation<br>
+    <span style="color:#aaaaaa;">■</span> Competition<br>
+    <span style="color:#9467bd;">■</span> Supplier Link<br>
+    <span style="color:#444444;">■</span> Other<br>
+    </div>
+    </body>
+</html>
