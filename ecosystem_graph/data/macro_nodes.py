@@ -1,5 +1,3 @@
-# ecosystem_graph/data/macro_nodes.py
-
 INDIA_MACRO = [
     "RBI Repo Rate",
     "G-Sec Yield",

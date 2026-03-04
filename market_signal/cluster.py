@@ -1,5 +1,3 @@
-# signal/cluster.py
-
 import pandas as pd
 from .config import CLUSTER_GAP_DAYS
 

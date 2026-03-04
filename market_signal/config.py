@@ -1,5 +1,3 @@
-# signal/config.py
-
 ISOLATION_FOREST_PARAMS = {
     "n_estimators": 200,
     "contamination": 0.03,

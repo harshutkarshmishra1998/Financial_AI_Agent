@@ -1,5 +1,3 @@
-# reasoning/pipeline.py
-
 from pathlib import Path
 from .context import load_run_context
 from .features import (

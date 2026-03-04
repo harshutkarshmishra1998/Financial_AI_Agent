@@ -1,5 +1,3 @@
-# ecosystem_graph/core/graph_engine.py
-
 import networkx as nx
 import hashlib
 
@@ -14,10 +12,7 @@ class EcosystemGraphEngine:
 
         self._add_node(self.root, "company")
 
-    # ------------------------
     # Basic Graph Ops
-    # ------------------------
-
     def _add_node(self, name, node_type):
         if name not in self.graph:
             self.graph.add_node(name, type=node_type)
@@ -30,10 +25,7 @@ class EcosystemGraphEngine:
     def has_node(self, name):
         return name in self.graph.nodes
 
-    # ------------------------
     # Public API
-    # ------------------------
-
     def add_dependency(self, node, node_type, relation):
         self._add_node(node, node_type)
         self._add_edge(self.root, node, relation)

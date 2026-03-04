@@ -13,10 +13,7 @@ from pydantic import BaseModel, Field
 from .config import DATA_ROOT, SCHEMA_VERSION, RUN_DB, SCHEMA_REGISTRY
 
 
-# =========================================================
 # UTILITIES
-# =========================================================
-
 def now():
     return datetime.utcnow()
 
@@ -27,10 +24,7 @@ def data_hash(df: pd.DataFrame) -> str:
     return hashlib.md5(pd.util.hash_pandas_object(df).values).hexdigest() #type: ignore
 
 
-# =========================================================
 # SCHEMA REGISTRY (prevents silent contract drift)
-# =========================================================
-
 class SchemaRegistry:
 
     @staticmethod
@@ -51,10 +45,7 @@ class SchemaRegistry:
         SCHEMA_REGISTRY.write_text(json.dumps(registry, indent=2))
 
 
-# =========================================================
 # BASE ARTIFACT
-# =========================================================
-
 class BaseArtifact(BaseModel):
     run_id: str
     phase: str
@@ -67,10 +58,7 @@ class BaseArtifact(BaseModel):
     feature_window: str
 
 
-# =========================================================
 # PHASE 1 ARTIFACT
-# =========================================================
-
 class AnomalyEvent(BaseArtifact):
 
     # market reality timestamp
@@ -84,10 +72,7 @@ class AnomalyEvent(BaseArtifact):
 SchemaRegistry.register(AnomalyEvent)
 
 
-# =========================================================
 # RUN LEDGER (sqlite)
-# =========================================================
-
 class RunLedger:
 
     @staticmethod
@@ -142,10 +127,7 @@ class RunLedger:
 RunLedger.init()
 
 
-# =========================================================
 # RUN MANAGER
-# =========================================================
-
 class RunManager:
 
     @staticmethod
@@ -156,10 +138,7 @@ class RunManager:
         return run_id
 
 
-# =========================================================
 # STORAGE ENGINE
-# =========================================================
-
 T = TypeVar("T", bound=BaseArtifact)
 
 class ArtifactStore:

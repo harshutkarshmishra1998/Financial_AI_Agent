@@ -5,10 +5,7 @@ import seaborn as sns
 import numpy as np
 
 
-# =========================================================
 # INTERNAL LOADER
-# =========================================================
-
 def _load_timeline(run_id):
     path = Path("data") / run_id / "signal" / "signal_timeline.jsonl"
     if not path.exists():
@@ -19,10 +16,7 @@ def _load_timeline(run_id):
     return df.set_index("date")
 
 
-# =========================================================
-# 3️⃣ MULTI SYMBOL OVERLAY
-# =========================================================
-
+# MULTI SYMBOL OVERLAY
 def multi_symbol_overlay(run_ids):
 
     plt.figure(figsize=(12,5))
@@ -47,10 +41,7 @@ def multi_symbol_overlay(run_ids):
     # plt.show()
 
 
-# =========================================================
-# 4️⃣ ANOMALY HEATMAP TIMELINE
-# =========================================================
-
+# ANOMALY HEATMAP TIMELINE
 def anomaly_heatmap(run_id):
 
     df = _load_timeline(run_id)
@@ -72,10 +63,7 @@ def anomaly_heatmap(run_id):
     # plt.show()
 
 
-# =========================================================
-# 5️⃣ REGIME SEGMENTATION VISUALIZER
-# =========================================================
-
+# REGIME SEGMENTATION VISUALIZER
 def regime_visualizer(run_id, threshold=0.7):
 
     df = _load_timeline(run_id)
@@ -90,10 +78,7 @@ def regime_visualizer(run_id, threshold=0.7):
     # plt.show()
 
 
-# =========================================================
-# 6️⃣ SIGNAL vs VOLATILITY PHASE DIAGRAM
-# =========================================================
-
+# SIGNAL vs VOLATILITY PHASE DIAGRAM
 def signal_vs_volatility(run_id):
 
     df = _load_timeline(run_id)
@@ -111,24 +96,15 @@ def signal_vs_volatility(run_id):
     plt.grid(True)
     # plt.show()
 
-# =========================================================
 # FULL SIGNAL CONTEXT PLOT (OFFLINE — NO API)
-# =========================================================
-
 def plot_full_signal_context(run_id, symbol=None):
 
-    # print("\n==============================")
     # print("FULL SIGNAL CONTEXT PLOT")
-    # print("==============================")
 
-    # -----------------------------
     # load timeline (contains price + features)
-    # -----------------------------
     df = _load_timeline(run_id)
 
-    # -----------------------------
     # load anomaly events
-    # -----------------------------
     events_path = Path("data") / run_id / "signal" / "anomalies.jsonl"
 
     if not events_path.exists():
@@ -141,9 +117,7 @@ def plot_full_signal_context(run_id, symbol=None):
     # align prices at anomaly timestamps
     anomaly_prices = df.loc[events["event_timestamp"], "close"]
 
-    # -----------------------------
     # plot
-    # -----------------------------
     fig, ax_price = plt.subplots(figsize=(12, 6))
 
     # price line
@@ -164,9 +138,7 @@ def plot_full_signal_context(run_id, symbol=None):
     else:
         ax_price.set_title("Price + Anomaly Signals")
 
-    # -----------------------------
     # signal strength axis
-    # -----------------------------
     ax_signal = ax_price.twinx()
 
     ax_signal.plot(

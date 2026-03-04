@@ -1,5 +1,3 @@
-# reasoning/features.py
-
 import networkx as nx
 
 

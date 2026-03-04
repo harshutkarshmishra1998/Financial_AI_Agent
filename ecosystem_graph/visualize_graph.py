@@ -23,9 +23,7 @@ def draw_ecosystem_graph(
         font_color="#000000" #type: ignore
     )
 
-    # ---------------------------------------------------
     # Node Colors
-    # ---------------------------------------------------
     node_colors = {
         "company": "#1f77b4",
         "macro": "#ff7f0e",
@@ -36,9 +34,7 @@ def draw_ecosystem_graph(
         "supplier": "#9467bd"
     }
 
-    # ---------------------------------------------------
     # Add Nodes
-    # ---------------------------------------------------
     for n in nodes:
         node_id = n["node"]
         node_type = n.get("type", "macro")
@@ -51,9 +47,7 @@ def draw_ecosystem_graph(
             size=20
         )
 
-    # ---------------------------------------------------
     # Edge Colors by Relation
-    # ---------------------------------------------------
     relation_colors = {
         "supply": "#1f77b4",
         "demand": "#ff7f0e",
@@ -65,9 +59,7 @@ def draw_ecosystem_graph(
         "supplies_to": "#9467bd"
     }
 
-    # ---------------------------------------------------
     # Add Edges
-    # ---------------------------------------------------
     for e in edges:
         relation = e.get("relation", "")
 
@@ -85,9 +77,7 @@ def draw_ecosystem_graph(
             arrows="to"
         )
 
-    # ---------------------------------------------------
     # Physics Layout (nice separation)
-    # ---------------------------------------------------
     net.barnes_hut(
         gravity=-8000,
         central_gravity=0.3,
@@ -96,9 +86,7 @@ def draw_ecosystem_graph(
         damping=0.09
     )
 
-    # ---------------------------------------------------
     # LEGEND (HTML overlay)
-    # ---------------------------------------------------
     legend_html = """
     <div style="
         position: fixed;

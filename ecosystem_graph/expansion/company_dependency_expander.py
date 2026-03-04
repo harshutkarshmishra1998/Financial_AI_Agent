@@ -17,10 +17,7 @@ class CompanyDependencyExpander:
         self.llm = llm
         self.max_partners = max_partners_per_type
 
-    # --------------------------------------------------
     # PUBLIC ENTRY
-    # --------------------------------------------------
-
     def expand(self, company_ticker, sector):
 
         if sector not in ALLOWED_DEPENDENCIES:
@@ -34,10 +31,7 @@ class CompanyDependencyExpander:
 
         self._insert(company_ticker, validated)
 
-    # --------------------------------------------------
     # LLM GENERATION
-    # --------------------------------------------------
-
     def _llm_generate(self, company, sector):
 
         prompt = f"""
@@ -51,9 +45,9 @@ Generate realistic business dependencies.
 Return JSON:
 
 {{
- "suppliers": ["company or entity names"],
- "customers": ["company or entity names"],
- "strategic": ["partner names"]
+    "suppliers": ["company or entity names"],
+    "customers": ["company or entity names"],
+    "strategic": ["partner names"]
 }}
 
 Rules:
@@ -68,10 +62,7 @@ Rules:
 
         return self._safe_json(response)
 
-    # --------------------------------------------------
     # ONTOLOGY VALIDATION
-    # --------------------------------------------------
-
     def _validate(self, raw, allowed):
 
         clean = {
@@ -114,10 +105,7 @@ Rules:
 
         return False
 
-    # --------------------------------------------------
     # GRAPH INSERTION
-    # --------------------------------------------------
-
     def _insert(self, company, deps):
 
         for supplier in deps["suppliers"]:
@@ -141,10 +129,7 @@ Rules:
 
             self.graph._add_edge(company, partner, "strategic_dependency")
 
-    # --------------------------------------------------
     # SAFE JSON PARSE
-    # --------------------------------------------------
-
     def _safe_json(self, text):
 
         if isinstance(text, dict):

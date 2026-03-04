@@ -1,11 +1,6 @@
 from dataclasses import dataclass
 from typing import Dict, List
 
-
-# ---------- Sector → Base Dependency Mapping ----------
-
-# ecosystem_graph/data/ontology.py
-
 INDUSTRY_DEPENDENCY_PROFILE = {
 
     "Financial Services": {

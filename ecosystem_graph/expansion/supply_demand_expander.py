@@ -28,10 +28,7 @@ class SupplyDemandExpander:
         # global visited registry
         self.visited = set()
 
-    # --------------------------------------------------
     # PUBLIC ENTRYPOINT
-    # --------------------------------------------------
-
     def expand(self, root_node, sector):
         """
         Expand supply-demand structure starting from root.
@@ -70,10 +67,7 @@ class SupplyDemandExpander:
                 self.visited.add(child_name)
                 queue.append((child_name, depth + 1))
 
-    # --------------------------------------------------
     # LLM GENERATION
-    # --------------------------------------------------
-
     def _generate_children(self, node_name, sector):
         """
         Ask LLM for supply and demand drivers.
@@ -128,10 +122,7 @@ JSON format:
 
         return results
 
-    # --------------------------------------------------
     # SAFETY GUARDS
-    # --------------------------------------------------
-
     def _is_valid_new_node(self, parent, child):
         """
         Prevent cycles, duplicates, nonsense.
@@ -154,10 +145,7 @@ JSON format:
 
         return True
 
-    # --------------------------------------------------
     # SAFE JSON PARSER
-    # --------------------------------------------------
-
     def _safe_parse_json(self, text):
         """
         Extract JSON from LLM response safely.
@@ -174,10 +162,7 @@ JSON format:
 
         return json.loads(text[start:end])
 
-    # --------------------------------------------------
     # FALLBACK (NO LLM / FAILURE)
-    # --------------------------------------------------
-
     def _fallback_generation(self, node):
         """
         Deterministic minimal expansion if LLM fails.

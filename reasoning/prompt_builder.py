@@ -1,5 +1,3 @@
-# reasoning/prompt_builder.py
-
 import json
 
 MAX_PROMPT_CHARS = 14000

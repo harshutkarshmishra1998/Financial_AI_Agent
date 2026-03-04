@@ -1,5 +1,3 @@
-# market_signal/data.py
-
 import yfinance as yf
 import pandas as pd
 
@@ -11,9 +9,7 @@ def fetch_ohlcv(symbol: str, start: str, end: str) -> pd.DataFrame:
     if df.empty: #type: ignore
         raise ValueError(f"No data for {symbol}")
 
-    # ---------------------------------------------
     # Flatten MultiIndex columns if present
-    # ---------------------------------------------
     if isinstance(df.columns, pd.MultiIndex): #type: ignore
         df.columns = df.columns.get_level_values(0) #type: ignore
 
@@ -33,9 +29,7 @@ def fetch_ohlcv(symbol: str, start: str, end: str) -> pd.DataFrame:
     df = df[~df.index.duplicated(keep="first")]
     df = df.dropna()
 
-    # ---------------------------------------------
     # Force numeric columns explicitly
-    # ---------------------------------------------
     for col in required_cols:
         df[col] = pd.to_numeric(df[col], errors="coerce")
 

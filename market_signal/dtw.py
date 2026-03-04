@@ -1,5 +1,3 @@
-# signal/dtw.py
-
 import numpy as np
 from fastdtw import fastdtw #type: ignore
 from scipy.spatial.distance import euclidean

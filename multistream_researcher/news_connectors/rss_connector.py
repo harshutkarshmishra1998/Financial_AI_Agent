@@ -1,4 +1,3 @@
-
 import feedparser
 
 def fetch_rss(url):

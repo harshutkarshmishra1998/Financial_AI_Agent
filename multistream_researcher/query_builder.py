@@ -1,4 +1,3 @@
-
 def build_queries(anomaly_event, graph_nodes, window_days=7):
     date = anomaly_event["timestamp"]
     symbol = anomaly_event.get("symbol", "")

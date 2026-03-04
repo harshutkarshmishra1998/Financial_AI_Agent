@@ -1,4 +1,3 @@
-
 from collections import Counter
 
 from multistream_researcher.query_builder import build_queries

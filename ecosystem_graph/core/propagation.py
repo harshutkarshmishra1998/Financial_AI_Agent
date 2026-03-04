@@ -1,5 +1,3 @@
-# ecosystem_graph/core/propagation.py
-
 from ecosystem_graph.data.macro_nodes import (
     INDIA_MACRO,
     GLOBAL_MACRO,
@@ -13,10 +11,7 @@ class PropagationEngine:
     def __init__(self, graph_engine):
         self.g = graph_engine
 
-    # -----------------------------------------------------
     # Layer 1 — Industry Drivers
-    # -----------------------------------------------------
-
     def inject_industry_profile(self, profile):
 
         for category, nodes in profile.items():
@@ -27,10 +22,7 @@ class PropagationEngine:
                     REL_TYPES.get(category.upper(), "influenced_by")
                 )
 
-    # -----------------------------------------------------
     # Layer 2 — Macro Propagation
-    # -----------------------------------------------------
-
     def propagate_to_macro(self):
 
         for node in list(self.g.graph.nodes):
@@ -59,10 +51,7 @@ class PropagationEngine:
                     "transmits_to"
                 )
 
-    # -----------------------------------------------------
     # Layer 3 — Policy Propagation
-    # -----------------------------------------------------
-
     def propagate_policy(self):
 
         for node in list(self.g.graph.nodes):
@@ -75,10 +64,7 @@ class PropagationEngine:
                     "influences"
                 )
 
-    # -----------------------------------------------------
     # Layer 4 — Macro Interconnectivity
-    # -----------------------------------------------------
-
     def build_macro_network(self):
 
         # Repo → Liquidity
