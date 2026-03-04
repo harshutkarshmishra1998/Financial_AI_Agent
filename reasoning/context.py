@@ -35,7 +35,7 @@ def _load_anomaly(run_dir: Path) -> dict:
 
 
 def _load_graph(run_dir: Path) -> nx.DiGraph:
-    graph_path = run_dir / "ecosystem_graph.graphml"
+    graph_path = run_dir / "graph_outputs" / "ecosystem_graph.graphml"
 
     if not graph_path.exists():
         raise FileNotFoundError(f"Missing graph: {graph_path}")

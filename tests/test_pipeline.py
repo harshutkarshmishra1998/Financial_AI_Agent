@@ -4,6 +4,9 @@ from market_signal.pipeline import run_signal_pipeline
 from ecosystem_graph.pipeline import EcosystemPipeline
 from multistream_researcher.pipeline import run_multistream_researcher
 
+from pathlib import Path
+from reasoning.pipeline import generate_anomaly_reasoning
+
 
 SYMBOL = "RELIANCE.NS"
 START = "2019-01-01"
@@ -27,5 +30,8 @@ nodes, edges = ecosystem.run(SYMBOL)
 print("Executing Multistream Research to ingest required data for research...")
 run_multistream_researcher(RUN_ID)
 
+print("Generating reasoning for detected anomalies...")
+reasoning = generate_anomaly_reasoning(Path(f"data/{RUN_ID}"))
 
-
+print("Reasoning Output:")
+print(reasoning)

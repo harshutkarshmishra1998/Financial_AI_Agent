@@ -21,7 +21,7 @@ class Phase3Researcher:
             selected_nodes = graph_nodes[:6]
 
         print(
-            f"[Phase3] Node filter summary → original: {original_nodes}, "
+            f"Node filter summary → original: {original_nodes}, "
             f"selected for retrieval: {len(selected_nodes)}"
         )
 
