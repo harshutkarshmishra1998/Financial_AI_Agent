@@ -6,7 +6,7 @@ def generate_reasoning_text(prompt: str) -> str:
     client = Groq()
 
     response = client.chat.completions.create(
-        model="qwen/qwen3-32b",
+        model=api_keys._loaded["LLM"],
         messages=[
             {"role": "user", "content": prompt}
         ],

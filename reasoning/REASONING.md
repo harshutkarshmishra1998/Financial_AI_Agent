@@ -59,7 +59,7 @@ The `reasoning` module turns structured artifacts (signal anomaly, graph, multis
 ## LLM execution
 ### `llm_interface.py`
 - `generate_reasoning_text(prompt)`
-  - Sends prompt to Groq chat model (`qwen/qwen3-32b`) and returns generated content.
+  - Sends prompt to the configured Groq chat model (`api_keys._loaded["LLM"]`) and returns generated content.
 
 ## Practical notes
 - Reasoning quality depends heavily on earlier stages producing complete artifacts.

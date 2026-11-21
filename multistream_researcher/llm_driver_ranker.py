@@ -9,7 +9,7 @@ class LLMDriverRanker:
     are expanded into web search queries.
     """
 
-    def __init__(self, model: str = "gpt-4o-mini"):
+    def __init__(self, model: str = api_keys._loaded["LLM"]):
         self.model = model
         self.client = None
         self.client = OpenAI()

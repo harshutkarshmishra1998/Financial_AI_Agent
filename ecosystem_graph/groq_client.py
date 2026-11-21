@@ -10,7 +10,7 @@ class GroqLLM:
 
     def __init__(
         self,
-        model="llama-3.3-70b-versatile",
+        model=api_keys._loaded["LLM"],
         temperature=0.2
     ):
         self.client = Groq()

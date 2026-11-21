@@ -56,7 +56,7 @@ The `ecosystem_graph` module builds a directed causal/company ecosystem graph ar
 ### `groq_client.py`
 - `GroqLLM`
   - Thin adapter exposing `.invoke(prompt)` over Groq chat completions.
-  - Defaults: model `llama-3.3-70b-versatile`, temperature `0.2`.
+  - Model: `api_keys._loaded["LLM"]`, temperature `0.2`.
 
 ## Expansion engines
 ### `expansion/supply_demand_expander.py`

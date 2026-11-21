@@ -19,6 +19,7 @@ ENV_KEYS = {
     "OPENAI_API_KEY": "OPENAI_API",
     "GROQ_API_KEY": "GROQ_API",
     "FRED_API_KEY": "FRED_API",
+    "LLM": "LLM"
 }
 
 # LOAD + EXPORT

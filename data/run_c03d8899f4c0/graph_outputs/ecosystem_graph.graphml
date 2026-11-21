@@ -1,0 +1,432 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"><key id="d1" for="edge" attr.name="relation" attr.type="string"/>
+<key id="d0" for="node" attr.name="type" attr.type="string"/>
+<graph edgedefault="directed"><node id="RELIANCE.NS">
+  <data key="d0">company</data>
+</node>
+<node id="Crude Oil">
+  <data key="d0">supply</data>
+</node>
+<node id="OPEC Production">
+  <data key="d0">global</data>
+</node>
+<node id="USD/INR">
+  <data key="d0">macro</data>
+</node>
+<node id="Fuel Tax">
+  <data key="d0">policy</data>
+</node>
+<node id="Dollar Index">
+  <data key="d0">global</data>
+</node>
+<node id="FII Flow">
+  <data key="d0">macro</data>
+</node>
+<node id="DII Flow">
+  <data key="d0">macro</data>
+</node>
+<node id="System Liquidity">
+  <data key="d0">macro</data>
+</node>
+<node id="RBI Repo Rate"/>
+<node id="US Fed Rate"/>
+<node id="Brent Crude"/>
+<node id="ONGC.NS"/>
+<node id="MRPL.NS"/>
+<node id="BPCL.NS"/>
+<node id="HINDPETRO.NS"/>
+<node id="IOC.NS"/>
+<node id="GAIL.NS"/>
+<node id="CHENNPETRO.NS"/>
+<node id="CASTROLIND.NS"/>
+<node id="IGL.NS"/>
+<node id="PETRONET.NS"/>
+<node id="GSPL.NS"/>
+<node id="OIL.NS"/>
+<node id="COALINDIA.NS"/>
+<node id="GUJGASLTD.NS"/>
+<node id="CrudeOilPrice">
+  <data key="d0">supply</data>
+</node>
+<node id="GlobalDemandGrowth">
+  <data key="d0">demand</data>
+</node>
+<node id="DomesticConsumption">
+  <data key="d0">demand</data>
+</node>
+<node id="RenewableSubsidies">
+  <data key="d0">demand</data>
+</node>
+<node id="OPECQuotas">
+  <data key="d0">supply</data>
+</node>
+<node id="RefineryCapacity">
+  <data key="d0">supply</data>
+</node>
+<node id="GDPGrowth">
+  <data key="d0">demand</data>
+</node>
+<node id="TransportDemand">
+  <data key="d0">demand</data>
+</node>
+<node id="EnergyPrice">
+  <data key="d0">demand</data>
+</node>
+<node id="PopGrowth">
+  <data key="d0">demand</data>
+</node>
+<node id="ProdCapacity">
+  <data key="d0">supply</data>
+</node>
+<node id="OilPrice">
+  <data key="d0">demand</data>
+</node>
+<node id="IncomeLevel">
+  <data key="d0">demand</data>
+</node>
+<node id="FuelTax">
+  <data key="d0">demand</data>
+</node>
+<node id="Subsidy">
+  <data key="d0">supply</data>
+</node>
+<node id="CarbonTax">
+  <data key="d0">demand</data>
+</node>
+<node id="EnergyDemand">
+  <data key="d0">demand</data>
+</node>
+<node id="TechCost">
+  <data key="d0">supply</data>
+</node>
+<node id="ProductionCost">
+  <data key="d0">supply</data>
+</node>
+<node id="DemandGrowth">
+  <data key="d0">demand</data>
+</node>
+<node id="SubstituteAvailability">
+  <data key="d0">demand</data>
+</node>
+<node id="CrudePrice">
+  <data key="d0">supply</data>
+</node>
+<node id="CapAvail">
+  <data key="d0">supply</data>
+</node>
+<node id="FuelDemand">
+  <data key="d0">demand</data>
+</node>
+<node id="PetroDemand">
+  <data key="d0">demand</data>
+</node>
+<node id="ProductionCapacity">
+  <data key="d0">supply</data>
+</node>
+<node id="Investment">
+  <data key="d0">supply</data>
+</node>
+<node id="FuelPrice">
+  <data key="d0">demand</data>
+</node>
+<node id="OilProd">
+  <data key="d0">supply</data>
+</node>
+<node id="OPECOutput">
+  <data key="d0">supply</data>
+</node>
+<node id="IndustrialDemand">
+  <data key="d0">demand</data>
+</node>
+<node id="ConsumerDemand">
+  <data key="d0">demand</data>
+</node>
+<node id="Subsidies">
+  <data key="d0">supply</data>
+</node>
+<node id="CapitalAvailability">
+  <data key="d0">supply</data>
+</node>
+<node id="Reserves">
+  <data key="d0">supply</data>
+</node>
+<node id="ProdCost">
+  <data key="d0">supply</data>
+</node>
+<node id="ExportDemand">
+  <data key="d0">demand</data>
+</node>
+<node id="Inflation">
+  <data key="d0">demand</data>
+</node>
+<node id="EnergySubsidy">
+  <data key="d0">supply</data>
+</node>
+<node id="RegCost">
+  <data key="d0">supply</data>
+</node>
+<node id="Income">
+  <data key="d0">demand</data>
+</node>
+<node id="RenewSubsidy">
+  <data key="d0">demand</data>
+</node>
+<node id="CapEx">
+  <data key="d0">supply</data>
+</node>
+<node id="LabCost">
+  <data key="d0">supply</data>
+</node>
+<node id="Indian Oil Corporation">
+  <data key="d0">supplier</data>
+</node>
+<edge source="RELIANCE.NS" target="Crude Oil">
+  <data key="d1">influenced_by</data>
+</edge>
+<edge source="RELIANCE.NS" target="OPEC Production">
+  <data key="d1">influenced_by</data>
+</edge>
+<edge source="RELIANCE.NS" target="USD/INR">
+  <data key="d1">influenced_by</data>
+</edge>
+<edge source="RELIANCE.NS" target="Fuel Tax">
+  <data key="d1">regulated_by</data>
+</edge>
+<edge source="RELIANCE.NS" target="ONGC.NS">
+  <data key="d1">competes_with</data>
+</edge>
+<edge source="RELIANCE.NS" target="MRPL.NS">
+  <data key="d1">competes_with</data>
+</edge>
+<edge source="RELIANCE.NS" target="BPCL.NS">
+  <data key="d1">competes_with</data>
+</edge>
+<edge source="RELIANCE.NS" target="HINDPETRO.NS">
+  <data key="d1">competes_with</data>
+</edge>
+<edge source="RELIANCE.NS" target="IOC.NS">
+  <data key="d1">competes_with</data>
+</edge>
+<edge source="RELIANCE.NS" target="GAIL.NS">
+  <data key="d1">competes_with</data>
+</edge>
+<edge source="RELIANCE.NS" target="CHENNPETRO.NS">
+  <data key="d1">competes_with</data>
+</edge>
+<edge source="RELIANCE.NS" target="CASTROLIND.NS">
+  <data key="d1">competes_with</data>
+</edge>
+<edge source="RELIANCE.NS" target="IGL.NS">
+  <data key="d1">competes_with</data>
+</edge>
+<edge source="RELIANCE.NS" target="PETRONET.NS">
+  <data key="d1">competes_with</data>
+</edge>
+<edge source="RELIANCE.NS" target="GSPL.NS">
+  <data key="d1">competes_with</data>
+</edge>
+<edge source="RELIANCE.NS" target="OIL.NS">
+  <data key="d1">competes_with</data>
+</edge>
+<edge source="RELIANCE.NS" target="COALINDIA.NS">
+  <data key="d1">competes_with</data>
+</edge>
+<edge source="RELIANCE.NS" target="GUJGASLTD.NS">
+  <data key="d1">competes_with</data>
+</edge>
+<edge source="RELIANCE.NS" target="CrudeOilPrice">
+  <data key="d1">supply</data>
+</edge>
+<edge source="RELIANCE.NS" target="GlobalDemandGrowth">
+  <data key="d1">demand</data>
+</edge>
+<edge source="RELIANCE.NS" target="DomesticConsumption">
+  <data key="d1">demand</data>
+</edge>
+<edge source="RELIANCE.NS" target="RenewableSubsidies">
+  <data key="d1">demand</data>
+</edge>
+<edge source="OPEC Production" target="Dollar Index">
+  <data key="d1">transmits_to</data>
+</edge>
+<edge source="USD/INR" target="FII Flow">
+  <data key="d1">transmits_to</data>
+</edge>
+<edge source="USD/INR" target="DII Flow">
+  <data key="d1">transmits_to</data>
+</edge>
+<edge source="RBI Repo Rate" target="System Liquidity">
+  <data key="d1">impacts</data>
+</edge>
+<edge source="US Fed Rate" target="Dollar Index">
+  <data key="d1">impacts</data>
+</edge>
+<edge source="Brent Crude" target="USD/INR">
+  <data key="d1">impacts</data>
+</edge>
+<edge source="ONGC.NS" target="RELIANCE.NS">
+  <data key="d1">competes_with</data>
+</edge>
+<edge source="MRPL.NS" target="RELIANCE.NS">
+  <data key="d1">competes_with</data>
+</edge>
+<edge source="BPCL.NS" target="RELIANCE.NS">
+  <data key="d1">competes_with</data>
+</edge>
+<edge source="HINDPETRO.NS" target="RELIANCE.NS">
+  <data key="d1">competes_with</data>
+</edge>
+<edge source="IOC.NS" target="RELIANCE.NS">
+  <data key="d1">competes_with</data>
+</edge>
+<edge source="GAIL.NS" target="RELIANCE.NS">
+  <data key="d1">competes_with</data>
+</edge>
+<edge source="CHENNPETRO.NS" target="RELIANCE.NS">
+  <data key="d1">competes_with</data>
+</edge>
+<edge source="CASTROLIND.NS" target="RELIANCE.NS">
+  <data key="d1">competes_with</data>
+</edge>
+<edge source="IGL.NS" target="RELIANCE.NS">
+  <data key="d1">competes_with</data>
+</edge>
+<edge source="PETRONET.NS" target="RELIANCE.NS">
+  <data key="d1">competes_with</data>
+</edge>
+<edge source="GSPL.NS" target="RELIANCE.NS">
+  <data key="d1">competes_with</data>
+</edge>
+<edge source="OIL.NS" target="RELIANCE.NS">
+  <data key="d1">competes_with</data>
+</edge>
+<edge source="COALINDIA.NS" target="RELIANCE.NS">
+  <data key="d1">competes_with</data>
+</edge>
+<edge source="GUJGASLTD.NS" target="RELIANCE.NS">
+  <data key="d1">competes_with</data>
+</edge>
+<edge source="CrudeOilPrice" target="OPECQuotas">
+  <data key="d1">supply</data>
+</edge>
+<edge source="CrudeOilPrice" target="RefineryCapacity">
+  <data key="d1">supply</data>
+</edge>
+<edge source="CrudeOilPrice" target="GDPGrowth">
+  <data key="d1">demand</data>
+</edge>
+<edge source="CrudeOilPrice" target="TransportDemand">
+  <data key="d1">demand</data>
+</edge>
+<edge source="GlobalDemandGrowth" target="EnergyPrice">
+  <data key="d1">demand</data>
+</edge>
+<edge source="GlobalDemandGrowth" target="PopGrowth">
+  <data key="d1">demand</data>
+</edge>
+<edge source="GlobalDemandGrowth" target="ProdCapacity">
+  <data key="d1">supply</data>
+</edge>
+<edge source="DomesticConsumption" target="OilPrice">
+  <data key="d1">demand</data>
+</edge>
+<edge source="DomesticConsumption" target="IncomeLevel">
+  <data key="d1">demand</data>
+</edge>
+<edge source="DomesticConsumption" target="FuelTax">
+  <data key="d1">demand</data>
+</edge>
+<edge source="DomesticConsumption" target="Subsidy">
+  <data key="d1">supply</data>
+</edge>
+<edge source="RenewableSubsidies" target="CarbonTax">
+  <data key="d1">demand</data>
+</edge>
+<edge source="RenewableSubsidies" target="EnergyDemand">
+  <data key="d1">demand</data>
+</edge>
+<edge source="RenewableSubsidies" target="TechCost">
+  <data key="d1">supply</data>
+</edge>
+<edge source="OPECQuotas" target="ProductionCost">
+  <data key="d1">supply</data>
+</edge>
+<edge source="OPECQuotas" target="DemandGrowth">
+  <data key="d1">demand</data>
+</edge>
+<edge source="OPECQuotas" target="SubstituteAvailability">
+  <data key="d1">demand</data>
+</edge>
+<edge source="RefineryCapacity" target="CrudePrice">
+  <data key="d1">supply</data>
+</edge>
+<edge source="RefineryCapacity" target="CapAvail">
+  <data key="d1">supply</data>
+</edge>
+<edge source="RefineryCapacity" target="FuelDemand">
+  <data key="d1">demand</data>
+</edge>
+<edge source="RefineryCapacity" target="PetroDemand">
+  <data key="d1">demand</data>
+</edge>
+<edge source="GDPGrowth" target="ProductionCapacity">
+  <data key="d1">supply</data>
+</edge>
+<edge source="GDPGrowth" target="Investment">
+  <data key="d1">supply</data>
+</edge>
+<edge source="TransportDemand" target="FuelPrice">
+  <data key="d1">demand</data>
+</edge>
+<edge source="TransportDemand" target="OilProd">
+  <data key="d1">supply</data>
+</edge>
+<edge source="EnergyPrice" target="OPECOutput">
+  <data key="d1">supply</data>
+</edge>
+<edge source="EnergyPrice" target="IndustrialDemand">
+  <data key="d1">demand</data>
+</edge>
+<edge source="EnergyPrice" target="ConsumerDemand">
+  <data key="d1">demand</data>
+</edge>
+<edge source="PopGrowth" target="Subsidies">
+  <data key="d1">supply</data>
+</edge>
+<edge source="ProdCapacity" target="CapitalAvailability">
+  <data key="d1">supply</data>
+</edge>
+<edge source="OilPrice" target="Reserves">
+  <data key="d1">supply</data>
+</edge>
+<edge source="IncomeLevel" target="ProdCost">
+  <data key="d1">supply</data>
+</edge>
+<edge source="IncomeLevel" target="ExportDemand">
+  <data key="d1">demand</data>
+</edge>
+<edge source="FuelTax" target="Inflation">
+  <data key="d1">demand</data>
+</edge>
+<edge source="FuelTax" target="EnergySubsidy">
+  <data key="d1">supply</data>
+</edge>
+<edge source="Subsidy" target="RegCost">
+  <data key="d1">supply</data>
+</edge>
+<edge source="Subsidy" target="Income">
+  <data key="d1">demand</data>
+</edge>
+<edge source="CarbonTax" target="RenewSubsidy">
+  <data key="d1">demand</data>
+</edge>
+<edge source="TechCost" target="CapEx">
+  <data key="d1">supply</data>
+</edge>
+<edge source="TechCost" target="LabCost">
+  <data key="d1">supply</data>
+</edge>
+<edge source="Indian Oil Corporation" target="RELIANCE.NS">
+  <data key="d1">supplies_to</data>
+</edge>
+</graph></graphml>
